@@ -45,3 +45,15 @@ out/
 ## ignore
 **/.gitignore
 !/.gitignore
+
+## 하위 gradlew 류 제외
+**/gradlew
+**/gradlew.bat
+**/gradle/wrapper/
+!/gradlew
+!/gradlew.bat
+!/gradle/wrapper/
+
+## 하위 settings.gradle 류 제외
+**/settings.gradle
+!/settings.gradle
