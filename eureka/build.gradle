@@ -1,19 +1,11 @@
 plugins {
-    id 'java'
-    id 'org.springframework.boot' version '3.3.3'
-    id 'io.spring.dependency-management' version '1.1.6'
-}
-
-ext {
-    set('springCloudVersion', "2023.0.3")
+    id 'catpang.java-conventions'
+    id 'catpang.spring-conventions'
+    id 'catpang.spring-cloud-conventions'
+    id 'org.springframework.boot'
 }
 
 dependencies {
     implementation 'org.springframework.cloud:spring-cloud-starter-netflix-eureka-server'
 }
 
-dependencyManagement {
-    imports {
-        mavenBom "org.springframework.cloud:spring-cloud-dependencies:${springCloudVersion}"
-    }
-}
