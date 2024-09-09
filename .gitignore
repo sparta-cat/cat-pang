@@ -57,3 +57,6 @@ out/
 ## 하위 settings.gradle 류 제외
 **/settings.gradle
 !/settings.gradle
+
+# 환경 변수 파일 추적 제외
+default.env
