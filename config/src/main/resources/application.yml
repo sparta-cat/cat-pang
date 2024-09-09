@@ -1,0 +1,27 @@
+server:
+  port: ${CONFIG_PORT}
+
+spring:
+  profiles:
+    active: native
+  application:
+    name: config-server
+  cloud:
+    config:
+      server:
+        native:
+          search-locations: classpath:/config-repo  #리소스 폴더 디렉토리
+
+eureka:
+  client:
+    service-url:
+      defaultZone: ${API_DOMAIN}:${EUREKA_PORT}/eureka/
+
+# swagger 사용시 패키지 이름까지 사용해서 구별하도록 설정
+springdoc:
+  use-fqn: true
+
+# 로그 수준
+logging.level:
+  org.hibernate.SQL: debug
+  org.hibernate.type: trace
