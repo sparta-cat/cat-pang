@@ -1,0 +1,47 @@
+services:
+  # Eureka 서버 정의
+  eureka:
+    build:
+      context: ./eureka
+    env_file:
+      - ${EUREKA_ENV}
+    ports:
+      - ${EUREKA_PORT}:${EUREKA_PORT}  # 애플리케이션 포트 매핑 설정 (수정 가능)
+    volumes:
+      - ./app_data:/path/in/container  # 애플리케이션 데이터 볼륨 설정 (필요한 경우 경로 수정 가능)
+    networks:
+      - my-microservices-network
+    healthcheck:
+      test: [ "CMD", "curl", "-f", "${EUREKA_OUT_DOMAIN}:${EUREKA_PORT}/actuator/health" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # Config 서버 정의
+  config:
+    build:
+      context: ./config
+    env_file:
+      - ${CONFIG_ENV}
+    ports:
+      - ${CONFIG_PORT}:${CONFIG_PORT}  # 애플리케이션 포트 매핑 설정 (수정 가능)
+    volumes:
+      - ./app_data:/path/in/container  # 애플리케이션 데이터 볼륨 설정 (필요한 경우 경로 수정 가능)
+    depends_on:
+      eureka:
+        condition: service_healthy
+    networks:
+      - my-microservices-network
+    healthcheck:
+      test: [ "CMD", "curl", "-f", "${EUREKA_OUT_DOMAIN}:${CONFIG_PORT}/actuator/health" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    restart: on-failure
+
+networks:
+  my-microservices-network:
+    driver: bridge
+
+volumes:
+  postgres_data:
