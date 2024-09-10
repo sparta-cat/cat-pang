@@ -59,4 +59,4 @@ out/
 !/settings.gradle
 
 # 환경 변수 파일 추적 제외
-default.env
+*.env

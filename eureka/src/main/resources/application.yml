@@ -1,7 +1,7 @@
 eureka:
   client:
     service-url:
-      defaultZone: ${API_DOMAIN}:${EUREKA_PORT}/eureka/
+      defaultZone: ${EUREKA_DOMAIN}:${EUREKA_PORT}/eureka/
     fetch-registry: 'false'
     register-with-eureka: 'false'
   instance:
