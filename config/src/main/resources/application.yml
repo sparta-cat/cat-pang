@@ -15,7 +15,7 @@ spring:
 eureka:
   client:
     service-url:
-      defaultZone: ${API_DOMAIN}:${EUREKA_PORT}/eureka/
+      defaultZone: ${EUREKA_DOMAIN}:${EUREKA_PORT}/eureka/
 
 # swagger 사용시 패키지 이름까지 사용해서 구별하도록 설정
 springdoc:
