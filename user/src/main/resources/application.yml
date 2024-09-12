@@ -4,6 +4,20 @@ server:
 spring:
   application:
     name: user
+  datasource:
+    url: ${DB_DATABASE}
+    username: ${DB_USERNAME}
+    password: ${DB_PASSWORD}
+    driver-class-name: ${DRIVER_CLASS}
+  jpa:
+    show-sql: true
+    hibernate:
+      ddl-auto: ${DDL}
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+        format_sql: true
+        highlight_sql: true
 
 eureka:
   client:
