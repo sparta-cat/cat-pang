@@ -12,7 +12,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @DiscriminatorColumn(name = "delivery_manager_type")
-@Table(name = "p_user")
+@Table(name = "p_users")
 public class User {
 
     @Id
