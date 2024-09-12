@@ -1,5 +1,8 @@
 package com.catpang.user.domain;
 
+import lombok.RequiredArgsConstructor;
+
+@RequiredArgsConstructor
 public enum RoleEnum {
 
     HUB_CUSTOMER(Authority.HUB_CUSTOMER),
@@ -8,10 +11,6 @@ public enum RoleEnum {
     MASTER_ADMIN(Authority.MASTER_ADMIN),;
 
     private final String authority;
-
-    RoleEnum(String authority) {
-        this.authority = authority;
-    }
 
     public String getAuthority() {
         return this.authority;}

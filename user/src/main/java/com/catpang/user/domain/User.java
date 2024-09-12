@@ -12,7 +12,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @DiscriminatorColumn(name = "delivery_manager_type")
-@Table(name = "p_users")
+@Table(name = "p_user")
 public class User {
 
     @Id
@@ -29,6 +29,4 @@ public class User {
     private String email;
     @Enumerated(EnumType.STRING)
     private RoleEnum role;
-
-
 }
