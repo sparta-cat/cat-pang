@@ -1,0 +1,43 @@
+package com.catpang.order.domain.model;
+
+import java.util.UUID;
+
+import org.hibernate.annotations.UuidGenerator;
+
+import com.catpang.core.domain.model.auditing.Timestamped;
+
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
+import jakarta.validation.constraints.NotNull;
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
+@Getter
+@Builder
+@Entity
+@Table(name = "p_orders")
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@AllArgsConstructor(access = AccessLevel.PROTECTED)
+public class Order extends Timestamped {
+
+	@Id
+	@UuidGenerator
+	@Column(name = "order_id")
+	private UUID id;
+
+	@Setter
+	@NotNull
+	private Integer totalQuantity;
+
+	@Setter
+	@NotNull
+	private UUID companyId;
+}
+
+

@@ -11,4 +11,7 @@ dependencies {
     api 'org.postgresql:postgresql'  // PostgreSQL 의존성 전파
     api 'org.springframework.boot:spring-boot-starter-data-redis'
     api 'org.springframework.boot:spring-boot-starter-web'
+    api 'com.h2database:h2'
+    implementation 'org.springframework.boot:spring-boot-starter-security'
+    testImplementation 'org.springframework.security:spring-security-test'
 }

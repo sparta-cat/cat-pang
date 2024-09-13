@@ -9,4 +9,5 @@ pluginManagement {
     }
 }
 rootProject.name = 'catpang'
-include 'eureka', 'config', 'user', 'core'
+
+include 'eureka', 'config', 'user', 'core', 'dto', 'order'

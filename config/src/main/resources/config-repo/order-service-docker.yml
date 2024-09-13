@@ -1,0 +1,47 @@
+server:
+  port: 19093
+
+eureka:
+  client:
+    service-url:
+      defaultZone: http://eureka:19090/eureka/
+
+spring:
+  datasource:
+    url: jdbc:postgresql://orderPostgres:5432/orderDB
+    username: order_user
+    password: password
+    driver-class-name: org.postgresql.Driver
+  jpa:
+    hibernate:
+      ddl-auto: update
+    properties:
+      hibernate:
+        show_sql: true
+        format_sql: true
+        use_sql_comments: true
+
+#---
+#
+#server:
+#  port: ${ORDER_PORT}
+#
+#eureka:
+#  client:
+#    service-url:
+#      defaultZone: ${EUREKA_DOMAIN}:${EUREKA_PORT}/eureka/
+#
+#spring:
+#  datasource:
+#    url: ${DB_DATABASE}
+#    username: ${DB_USERNAME}
+#    password: ${DB_PASSWORD}
+#    driver-class-name: ${DRIVER_CLASS}
+#  jpa:
+#    hibernate:
+#      ddl-auto: ${DDL}
+#    properties:
+#      hibernate:
+#        show_sql: true
+#        format_sql: true
+#        use_sql_comments: true
