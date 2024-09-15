@@ -11,7 +11,6 @@ import lombok.Getter;
  * Global Error CodeList : 전역으로 발생하는 에러코드를 관리한다.
  * Custom Error CodeList : 업무 페이지에서 발생하는 에러코드를 관리한다
  * Error Code Constructor : 에러코드를 직접적으로 사용하기 위한 생성자를 구성한다.
- *
  */
 @Getter
 public enum ErrorCode implements ResponseCode, Serializable {
@@ -61,6 +60,9 @@ public enum ErrorCode implements ResponseCode, Serializable {
 
 	// Header 에 데이터가 존재하지 않는 경우
 	NOT_VALID_HEADER(HttpStatus.NOT_FOUND, "G012", "Header validation failed"),
+
+	// 권한 없음 (401 Unauthorized)
+	UNAUTHORIZED(HttpStatus.UNAUTHORIZED, "G013", "Unauthorized"),
 
 	// 서버가 처리 할 방법을 모르는 경우 발생
 	INTERNAL_SERVER_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "G999", "Internal Server Error Exception"),
