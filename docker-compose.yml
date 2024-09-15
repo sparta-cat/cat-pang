@@ -39,6 +39,48 @@ services:
       retries: 5
     restart: on-failure
 
+  # PostgresSQL 정의
+  orderPostgres:
+    image: postgres:13
+    env_file:
+      - ${ORDER_DB_ENV}
+    ports:
+      - ${ORDER_DB_OUTER_PORT}:${ORDER_DB_INNER_PORT}
+    volumes:
+      - postgres_data:/var/lib/postgresql/data  # 데이터 영속성을 위한 볼륨 설정
+    networks:
+      - my-microservices-network
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}" ]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  # Order 서버 정의
+  order:
+    build:
+      context: ./order
+    env_file:
+      - docker_env_files/order_docker.env
+    ports:
+      - ${ORDER_PORT}:${ORDER_PORT}  # 애플리케이션 포트 매핑 설정 (수정 가능)
+    volumes:
+      - ./app_data:/path/in/container  # 애플리케이션 데이터 볼륨 설정 (필요한 경우 경로 수정 가능)
+    depends_on:
+      config:
+        condition: service_healthy
+      orderPostgres:
+        condition: service_healthy
+    networks:
+      - my-microservices-network
+    healthcheck:
+      test: [ "CMD", "curl", "-f", "${EUREKA_OUT_DOMAIN}:${ORDER_PORT}/actuator/health" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    restart: on-failure
+
+
 networks:
   my-microservices-network:
     driver: bridge
