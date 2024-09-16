@@ -13,6 +13,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.catpang.order.domain.model.Order;
 import com.catpang.order.domain.repository.OrderRepository;
 import com.catpang.order.domain.repository.OrderRepositoryHelper;
+import com.catpang.order.domain.repository.OrderSearchCondition;
 import com.catpang.order.infrastructure.feign.FeignCompanyInternalController;
 
 import lombok.AccessLevel;
@@ -87,6 +88,17 @@ public class OrderService {
 	 */
 	private Page<Result> readOrdersById(Pageable pageable, Long ownerId) {
 		return dtoFrom(orderRepository.findAllByOwnerId(pageable, ownerId));
+	}
+
+	/**
+	 * 검색 조건에 따라 주문을 검색하는 메서드
+	 *
+	 * @param pageable  페이징 정보
+	 * @param condition 검색 조건 (주문 ID, 소유자 ID 등을 포함)
+	 * @return 페이징된 검색된 주문 결과
+	 */
+	public Page<Result> searchOrder(Pageable pageable, OrderSearchCondition condition) {
+		return dtoFrom(orderRepository.search(condition, pageable));
 	}
 
 	/**
