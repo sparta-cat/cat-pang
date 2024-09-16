@@ -2,7 +2,9 @@ package com.catpang.order.presentation;
 
 import static com.catpang.core.application.dto.OrderDto.*;
 import static com.catpang.core.domain.model.RoleEnum.Authority.*;
+import static com.catpang.order.application.service.OrderMapper.*;
 
+import java.util.List;
 import java.util.UUID;
 
 import org.springframework.data.domain.Page;
@@ -23,6 +25,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.catpang.core.infrastructure.UserRoleChecker;
 import com.catpang.order.application.service.OrderAuthService;
 import com.catpang.order.application.service.OrderService;
+import com.catpang.order.domain.repository.OrderSearchCondition;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -82,6 +85,33 @@ public class OrderController {
 		@RequestParam(required = false) Long id) {
 		boolean isMasterAdmin = userRoleChecker.isMasterAdmin(userDetails);
 		return orderService.readOrderAll(pageable, isMasterAdmin, id);
+	}
+
+	/**
+	 * 검색 조건에 따라 주문을 검색하는 엔드포인트입니다.
+	 *
+	 * @param ids 검색할 주문의 UUID 리스트 (선택적)
+	 * @param ownerIds 주문 소유자 ID 리스트 (선택적)
+	 * @param pageable 페이징 정보를 담은 객체
+	 * @param userDetails 인증된 사용자 정보
+	 * @return 검색된 주문 목록을 반환합니다.
+	 */
+	@PreAuthorize("isAuthenticated()")
+	@GetMapping("/search")
+	public Page<Result> searchOrder(@RequestParam(required = false) List<UUID> ids,
+		@RequestParam(required = false) List<Long> ownerIds, Pageable pageable,
+		@AuthenticationPrincipal UserDetails userDetails) {
+		boolean isMasterAdmin = userRoleChecker.isMasterAdmin(userDetails);
+		if (!isMasterAdmin) {
+			ownerIds = List.of(getUserId(userDetails.getUsername()));
+		}
+
+		OrderSearchCondition searchCondition = OrderSearchCondition.builder()
+			.ids(ids)
+			.ownerIds(ownerIds)
+			.build();
+
+		return orderService.searchOrder(pageable, searchCondition);
 	}
 
 	/**

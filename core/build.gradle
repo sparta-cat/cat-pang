@@ -2,6 +2,7 @@ plugins {
     id 'catpang.java-conventions'
     id 'catpang.spring-conventions'
     id 'catpang.spring-cloud-conventions'
+    id 'catpang.query-dsl-conventions'
     id 'org.springframework.boot'
     id 'java-library'  // 추가: java-library 플러그인
 }

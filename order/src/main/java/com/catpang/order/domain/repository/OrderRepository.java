@@ -11,6 +11,7 @@ import com.catpang.order.domain.model.Order;
 
 @Repository
 public interface OrderRepository extends BaseRepository<Order, UUID, OrderSearchCondition> {
+	Page<Order> search(OrderSearchCondition condition, Pageable pageable);
 
 	Page<Order> findAllByOwnerId(Pageable pageable, Long ownerId);
 }
