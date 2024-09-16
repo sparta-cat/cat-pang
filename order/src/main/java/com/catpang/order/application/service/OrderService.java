@@ -130,6 +130,7 @@ public class OrderService {
 	/**
 	 * 주문을 소프트 삭제하는 메서드
 	 *
+	 * @param id 소프트 삭제할 주문의 ID
 	 * @return 소프트 삭제된 주문 결과와 삭제자 정보
 	 */
 	@Transactional
