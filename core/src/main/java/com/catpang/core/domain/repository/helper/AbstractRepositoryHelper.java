@@ -39,6 +39,35 @@ public abstract class AbstractRepositoryHelper<E extends Timestamped, K>
 	}
 
 	/**
+	 * 주어진 기본 키로 엔티티가 존재하는지 여부를 확인합니다.
+	 *
+	 * @param primaryKey 엔티티의 기본 키
+	 * @return 엔티티가 존재하면 true, 존재하지 않으면 false
+	 */
+	public boolean existsById(K primaryKey) {
+		Class<E> clazz = getGenericClass();
+		String jpql = String.format("SELECT COUNT(e) FROM %s e WHERE e.id = :id AND e.isDeleted = false",
+			clazz.getSimpleName());
+		Long count = em.createQuery(jpql, Long.class)
+			.setParameter("id", primaryKey)
+			.getSingleResult();
+		return count > 0;
+	}
+
+	/**
+	 * 엔티티가 존재하지 않으면 예외를 발생시킵니다.
+	 *
+	 * @param primaryKey 엔티티의 기본 키
+	 * @throws EntityNotFoundException 엔티티가 존재하지 않으면 예외 발생
+	 */
+	public void ensureExistsOrThrow(K primaryKey) {
+		if (!existsById(primaryKey)) {
+			Class<E> clazz = getGenericClass();
+			throw createException(clazz, primaryKey);
+		}
+	}
+
+	/**
 	 * 리플렉션을 사용하여 제네릭 타입의 엔티티 클래스를 추출하여 반환합니다.
 	 *
 	 * @return 엔티티의 클래스 타입

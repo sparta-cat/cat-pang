@@ -1,8 +1,12 @@
 package com.catpang.core.application.dto;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.UUID;
 
+import org.springframework.data.domain.Page;
+
+import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.PositiveOrZero;
 import lombok.Builder;
@@ -20,10 +24,19 @@ public interface OrderDto {
 		}
 	}
 
-	@With
-	@Builder
-	record Create(@NotNull @PositiveOrZero Integer totalQuantity, @NotNull UUID companyId, @NotNull Long ownerId) {
+	interface Result {
+		@lombok.With
+		@Builder
+		record Single(UUID id, Integer totalQuantity, UUID companyId, Long ownerId
 
+		) {
+
+		}
+
+		@Builder
+		record With<R>(UUID id, Integer totalQuantity, UUID companyId, Long ownerId, Page<R> results) {
+
+		}
 	}
 
 	@With
@@ -33,9 +46,9 @@ public interface OrderDto {
 
 	@With
 	@Builder
-	record Result(UUID id, Integer totalQuantity, UUID companyId, Long ownerId
-
-	) {
+	record Create(@NotNull UUID companyId, @NotNull Long ownerId,
+				  @NotEmpty List<OrderProductDto.Create> orderProductDtoes) {
 
 	}
+
 }

@@ -22,6 +22,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.catpang.core.application.dto.OrderProductDto;
 import com.catpang.core.infrastructure.UserRoleChecker;
 import com.catpang.order.application.service.OrderAuthService;
 import com.catpang.order.application.service.OrderService;
@@ -47,14 +48,15 @@ public class OrderController {
 
 	/**
 	 * 새로운 주문을 생성하는 엔드포인트입니다.
+	 * 주문 생성
 	 *
 	 * @param dto 주문 생성 정보를 담은 DTO 객체
 	 * @return 생성된 주문 정보를 반환합니다.
 	 */
 	@PreAuthorize("isAuthenticated()")
 	@PostMapping
-	public Result postOrder(@Valid @RequestBody Create dto) {
-		return orderService.createOrder(dto);
+	public Result.With<OrderProductDto.Result> postOrder(Pageable pageable, @Valid @RequestBody Create dto) {
+		return orderService.createOrder(pageable, dto);
 	}
 
 	/**
@@ -66,7 +68,7 @@ public class OrderController {
 	 */
 	@PreAuthorize("hasRole('" + HUB_CUSTOMER + "') or hasRole('" + HUB_ADMIN + "') or hasRole('" + MASTER_ADMIN + "')")
 	@GetMapping("/{orderId}")
-	public Result getOrder(@PathVariable UUID orderId, @AuthenticationPrincipal UserDetails userDetails) {
+	public Result.Single getOrder(@PathVariable UUID orderId, @AuthenticationPrincipal UserDetails userDetails) {
 		orderAuthService.requireOrderOwner(userDetails, orderId);
 		return orderService.readOrder(orderId);
 	}
@@ -81,7 +83,7 @@ public class OrderController {
 	 */
 	@PreAuthorize("isAuthenticated()")
 	@GetMapping
-	public Page<Result> getOrders(Pageable pageable, @AuthenticationPrincipal UserDetails userDetails,
+	public Page<Result.Single> getOrders(Pageable pageable, @AuthenticationPrincipal UserDetails userDetails,
 		@RequestParam(required = false) Long id) {
 		boolean isMasterAdmin = userRoleChecker.isMasterAdmin(userDetails);
 		return orderService.readOrderAll(pageable, isMasterAdmin, id);
@@ -98,7 +100,7 @@ public class OrderController {
 	 */
 	@PreAuthorize("isAuthenticated()")
 	@GetMapping("/search")
-	public Page<Result> searchOrder(@RequestParam(required = false) List<UUID> ids,
+	public Page<Result.Single> searchOrder(@RequestParam(required = false) List<UUID> ids,
 		@RequestParam(required = false) List<Long> ownerIds, Pageable pageable,
 		@AuthenticationPrincipal UserDetails userDetails) {
 		boolean isMasterAdmin = userRoleChecker.isMasterAdmin(userDetails);
@@ -124,7 +126,7 @@ public class OrderController {
 	 */
 	@PreAuthorize("hasRole('" + HUB_ADMIN + "') or hasRole('" + MASTER_ADMIN + "')")
 	@PutMapping("/{orderId}")
-	public Result putOrder(@PathVariable UUID orderId, @Valid @RequestBody Put dto,
+	public Result.Single putOrder(@PathVariable UUID orderId, @Valid @RequestBody Put dto,
 		@AuthenticationPrincipal UserDetails userDetails) {
 		orderAuthService.requireOrderOwner(userDetails, orderId);
 		return orderService.putOrder(orderId, dto);

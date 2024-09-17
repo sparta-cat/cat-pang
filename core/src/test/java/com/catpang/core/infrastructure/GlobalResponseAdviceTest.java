@@ -66,7 +66,7 @@ class TestController {
 	 * @return OrderDto.Result 객체
 	 */
 	@GetMapping("/test")
-	public OrderDto.Result test() {
-		return OrderDto.Result.builder().id(UUID.randomUUID()).build();  // 이 응답이 ApiResponse.Success로 감싸짐
+	public OrderDto.Result.Single test() {
+		return OrderDto.Result.Single.builder().id(UUID.randomUUID()).build();  // 이 응답이 ApiResponse.Success로 감싸짐
 	}
 }

@@ -11,13 +11,12 @@ public class OrderMapper extends EntityMapper {
 	public static Order entityFrom(Create createDto) {
 		return Order.builder()
 			.companyId(createDto.companyId())
-			.totalQuantity(createDto.totalQuantity())
 			.ownerId(createDto.ownerId())
 			.build();
 	}
 
-	public static Result dtoFrom(Order order) {
-		return Result.builder()
+	public static Result.Single dtoFrom(Order order) {
+		return Result.Single.builder()
 			.id(order.getId())
 			.companyId(order.getCompanyId())
 			.totalQuantity(order.getTotalQuantity())
@@ -33,12 +32,22 @@ public class OrderMapper extends EntityMapper {
 			.build();
 	}
 
-	public static Page<Result> dtoFrom(Page<Order> orders) {
+	public static Page<Result.Single> dtoFrom(Page<Order> orders) {
 		return orders.map(OrderMapper::dtoFrom);
 	}
 
 	public static Order putToEntity(Put putDto, Order order) {
 		order.setTotalQuantity(putDto.totalQuantity());
 		return order;
+	}
+
+	public static <R> Result.With<R> dtoFrom(Order order, Page<R> results) {
+		return Result.With.<R>builder()
+			.id(order.getId())
+			.companyId(order.getCompanyId())
+			.totalQuantity(order.getTotalQuantity())
+			.ownerId(order.getOwnerId())
+			.results(results)
+			.build();
 	}
 }
