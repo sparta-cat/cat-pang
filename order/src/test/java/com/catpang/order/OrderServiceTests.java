@@ -64,7 +64,7 @@ class OrderServiceTests {
 	@BeforeEach
 	void setUp() throws SQLException {
 		CompanyDto.Result companyResult = CompanyDto.Result.builder()
-			.id(UUID_ID)
+			.id(COMPANY_ID)
 			.companyName(NAME)
 			.companyAddress(ADDRESS)
 			.companyPhone(MOBILE_NUMBER)
@@ -115,8 +115,7 @@ class OrderServiceTests {
 		void 유효한_데이터로_주문_생성시_성공() {
 			// Given
 			Create createOrderDto = Create.builder()
-				.totalQuantity(PRICE)
-				.companyId(UUID_ID)
+				.companyId(COMPANY_ID)
 				.ownerId(USER_ID)
 				.build();
 
@@ -125,7 +124,7 @@ class OrderServiceTests {
 
 			// Then
 			assertNotNull(result);
-			assertEquals(PRICE, result.totalQuantity());
+			assertEquals(COMPANY_ID, result.companyId());
 			assertEquals(USER_ID, result.ownerId());
 		}
 	}
@@ -154,7 +153,7 @@ class OrderServiceTests {
 		void 존재하지_않는_주문ID로_조회시_실패() {
 			// When & Then
 			assertThrows(EntityNotFoundException.class, () -> {
-				orderService.readOrder(UUID_ID);
+				orderService.readOrder(ORDER_ID);
 			});
 		}
 	}
@@ -184,7 +183,7 @@ class OrderServiceTests {
 		void 존재하지_않는_주문ID로_삭제시_실패() {
 			// When & Then
 			assertThrows(EntityNotFoundException.class, () -> {
-				orderService.deleteOrder(UUID_ID);
+				orderService.deleteOrder(ORDER_ID);
 			});
 		}
 	}
