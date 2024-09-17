@@ -45,7 +45,18 @@ public class OrderService {
 		Order order = entityFrom(createDto);
 		order.setCompanyId(companyId);
 
-		return dtoFrom(orderRepository.save(order));
+		order = orderRepository.save(order);
+		Page<OrderProductDto.Result> orderProductResults =
+			orderProductService.createOrderProducts(pageable,
+				createDto.orderProductDtoes(), order.getId());
+
+		Integer totalQuantity = order.getTotalQuantity();
+		totalQuantity += orderProductResults.stream()
+			.mapToInt(OrderProductDto.Result::quantity).sum();
+
+		order.setTotalQuantity(totalQuantity);
+
+		return dtoFrom(order, orderProductResults);
 	}
 
 	/**
@@ -139,9 +150,23 @@ public class OrderService {
 	 * @return 소프트 삭제된 주문 결과와 삭제자 정보
 	 */
 	@Transactional
-	public Delete.Result softDeleteOrder(UUID id) {
-		Order order = repositoryHelper.findOrThrowNotFound(id);
-		order.softDelete();
+	public Delete.Result softDeleteOrder(UUID orderId) {
+		// Order 조회 및 삭제
+		Order order = repositoryHelper.findOrThrowNotFound(orderId);
+		order.softDelete(); // Order 자체의 soft delete
+
+		// Order에 해당하는 OrderProduct들 조회
+		Page<OrderProduct> orderProducts = orderProductRepository.findAllByOrderId(Pageable.unpaged(), orderId);
+
+		// OrderProduct들에 soft delete 전파
+		for (OrderProduct orderProduct : orderProducts) {
+			orderProduct.softDelete();
+		}
+
+		// OrderProduct를 배치로 저장
+		orderProductRepository.saveAll(orderProducts);
+
+		// 변경된 Order 저장
 		return dtoWithDeleter(orderRepository.save(order), order.getDeletedBy());
 	}
 }

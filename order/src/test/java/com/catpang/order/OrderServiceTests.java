@@ -75,6 +75,16 @@ class OrderServiceTests {
 
 	@BeforeEach
 	void setUp() throws SQLException {
+
+		// SecurityContext와 Authentication을 Mocking
+		Authentication authentication = mock(Authentication.class);
+		SecurityContext securityContext = mock(SecurityContext.class);
+		SecurityContextHolder.setContext(securityContext);
+
+		// 인증된 사용자 이름으로 "USER_ID"를 반환
+		given(securityContext.getAuthentication()).willReturn(authentication);
+		given(authentication.getName()).willReturn(USER_ID.toString());
+
 		CompanyDto.Result companyResult = CompanyDto.Result.builder()
 			.id(COMPANY_ID)
 			.companyName(NAME)
@@ -89,6 +99,21 @@ class OrderServiceTests {
 
 		// Mocking FeignClient 호출
 		given(companyController.getCompany(any(UUID.class))).willReturn(companyResponse);
+
+		// Mock Product 호출
+		ProductDto.Result productResult = ProductDto.Result.builder()
+			.id(PRODUCT_ID)
+			.name(PRODUCT_NAME)
+			.price(PRICE)
+			.companyId(COMPANY_ID)
+			.build();
+
+		// FeignClient 모킹 - Product 조회
+		ApiResponse.Success<ProductDto.Result> productResponse = ApiResponse.Success.<ProductDto.Result>builder()
+			.successCode(SELECT_SUCCESS)
+			.result(productResult)
+			.build();
+		given(productController.getProduct(any(UUID.class))).willReturn(productResponse);
 
 		H2DbCleaner.clean(dataSource);
 	}
@@ -114,6 +139,8 @@ class OrderServiceTests {
 			Create createOrderDto = Create.builder()
 				.companyId(COMPANY_ID)
 				.ownerId(USER_ID)
+				.orderProductDtoes(
+					List.of(anOrderProductCreateDto(), anOrderProductCreateDto(), anOrderProductCreateDto()))
 				.build();
 
 			// When
@@ -183,6 +210,29 @@ class OrderServiceTests {
 				orderService.deleteOrder(ORDER_ID);
 			});
 		}
+
+		@Test
+		void 주문_삭제시_관련_주문상품들이_softDelete_전파되는지_검증(@Autowired OrderProductRepository orderProductRepository) {
+			// Given
+			Order order = orderRepository.save(anOrder());
+
+			// OrderProduct 두 개를 해당 Order에 저장
+			OrderProduct orderProduct1 = orderProductRepository.save(
+				anOrderProduct().withOrder(order).withQuantity(10));
+			OrderProduct orderProduct2 = orderProductRepository.save(
+				anOrderProduct().withOrder(order).withQuantity(20));
+
+			// When: Order를 softDelete
+			orderService.softDeleteOrder(order.getId());
+
+			// Then: 해당 Order에 속한 OrderProduct들이 softDelete 되었는지 검증
+			OrderProduct foundOrderProduct1 = orderProductRepository.findById(orderProduct1.getId()).orElseThrow();
+			OrderProduct foundOrderProduct2 = orderProductRepository.findById(orderProduct2.getId()).orElseThrow();
+
+			assertThat(foundOrderProduct1.getIsDeleted(), is(true));
+			assertThat(foundOrderProduct2.getIsDeleted(), is(true));
+		}
+
 	}
 
 	@Nested

@@ -40,4 +40,14 @@ public class OrderMapper extends EntityMapper {
 		order.setTotalQuantity(putDto.totalQuantity());
 		return order;
 	}
+
+	public static <R> Result.With<R> dtoFrom(Order order, Page<R> results) {
+		return Result.With.<R>builder()
+			.id(order.getId())
+			.companyId(order.getCompanyId())
+			.totalQuantity(order.getTotalQuantity())
+			.ownerId(order.getOwnerId())
+			.results(results)
+			.build();
+	}
 }
