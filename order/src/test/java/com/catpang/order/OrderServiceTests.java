@@ -28,8 +28,9 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 
 import com.catpang.core.application.dto.CompanyDto;
-import com.catpang.core.application.dto.OrderDto.Create;
-import com.catpang.core.application.dto.OrderDto.Result;
+import com.catpang.core.application.dto.OrderDto.Result.Single;
+import com.catpang.core.application.dto.OrderProductDto;
+import com.catpang.core.application.dto.ProductDto;
 import com.catpang.core.application.response.ApiResponse;
 import com.catpang.core.codes.SuccessCode;
 import com.catpang.core.infrastructure.util.H2DbCleaner;
@@ -120,7 +121,7 @@ class OrderServiceTests {
 				.build();
 
 			// When
-			Result result = orderService.createOrder(createOrderDto);
+			Result.With<OrderProductDto.Result> result = orderService.createOrder(Pageable.unpaged(), createOrderDto);
 
 			// Then
 			assertNotNull(result);
@@ -141,7 +142,7 @@ class OrderServiceTests {
 			Order savedOrder = orderRepository.save(anOrder());
 
 			// When
-			Result result = orderService.readOrder(savedOrder.getId());
+			Single result = orderService.readOrder(savedOrder.getId());
 
 			// Then
 			assertNotNull(result);
@@ -202,7 +203,7 @@ class OrderServiceTests {
 				.build();
 
 			// When
-			Page<Result> resultPage = orderService.searchOrder(pageable, condition);
+			Page<Single> resultPage = orderService.searchOrder(pageable, condition);
 
 			// Then
 			assertNotNull(resultPage);
@@ -220,7 +221,7 @@ class OrderServiceTests {
 				.build();
 
 			// When
-			Page<Result> resultPage = orderService.searchOrder(pageable, condition);
+			Page<Single> resultPage = orderService.searchOrder(pageable, condition);
 
 			// Then
 			assertNotNull(resultPage);
@@ -245,7 +246,7 @@ class OrderServiceTests {
 			Pageable pageable = PageRequest.of(0, 10);
 
 			// When
-			Page<Result> resultPage = orderService.readOrderAll(pageable, true, null);
+			Page<Single> resultPage = orderService.readOrderAll(pageable, true, null);
 
 			// Then
 			assertNotNull(resultPage);
@@ -259,7 +260,7 @@ class OrderServiceTests {
 			Pageable pageable = PageRequest.of(0, 10);
 
 			// When
-			Page<Result> resultPage = orderService.readOrderAll(pageable, false, USER_ID);
+			Page<Single> resultPage = orderService.readOrderAll(pageable, false, USER_ID);
 
 			// Then
 			assertNotNull(resultPage);

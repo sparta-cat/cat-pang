@@ -17,6 +17,6 @@ public interface OrderInternalController {
 	 * @return 성공적인 응답과 조회된 주문 정보
 	 */
 
-	ApiResponse<Result> getOrder(@PathVariable UUID id);
+	ApiResponse<Result.Single> getOrder(@PathVariable UUID id);
 
 }

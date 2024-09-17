@@ -10,7 +10,10 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.catpang.core.application.dto.OrderProductDto;
 import com.catpang.order.domain.model.Order;
+import com.catpang.order.domain.model.OrderProduct;
+import com.catpang.order.domain.repository.OrderProductRepository;
 import com.catpang.order.domain.repository.OrderRepository;
 import com.catpang.order.domain.repository.OrderRepositoryHelper;
 import com.catpang.order.domain.repository.OrderSearchCondition;
@@ -26,11 +29,13 @@ public class OrderService {
 
 	private final OrderRepository orderRepository;
 	private final OrderRepositoryHelper repositoryHelper;
+	private final OrderProductRepository orderProductRepository;
 	private final FeignCompanyInternalController companyController;
+	private final OrderProductService orderProductService;
 
 	/**
 	 * 새로운 주문을 생성하는 메서드
-	 *
+	 * @param pageable 주문상품의 페이징 정보
 	 * @param createDto 주문 생성 정보
 	 * @return 생성된 주문 결과
 	 */
@@ -51,7 +56,7 @@ public class OrderService {
 	 * @param ownerId       주문 소유자 ID (관리자가 아닌 경우 필수)
 	 * @return 페이징된 주문 결과
 	 */
-	public Page<Result> readOrderAll(Pageable pageable, boolean isMasterAdmin, Long ownerId) {
+	public Page<Result.Single> readOrderAll(Pageable pageable, boolean isMasterAdmin, Long ownerId) {
 		if (isMasterAdmin) {
 			return readOrderAll(pageable);
 		} else {
@@ -65,7 +70,7 @@ public class OrderService {
 	 * @param id 조회할 주문의 ID
 	 * @return 조회된 주문 결과
 	 */
-	public Result readOrder(UUID id) {
+	public Result.Single readOrder(UUID id) {
 		return dtoFrom(repositoryHelper.findOrThrowNotFound(id));
 	}
 
@@ -75,7 +80,7 @@ public class OrderService {
 	 * @param pageable 페이징 정보
 	 * @return 페이징된 주문 결과
 	 */
-	private Page<Result> readOrderAll(Pageable pageable) {
+	private Page<Result.Single> readOrderAll(Pageable pageable) {
 		return dtoFrom(orderRepository.findAll(pageable));
 	}
 
@@ -86,7 +91,7 @@ public class OrderService {
 	 * @param ownerId  소유자 ID
 	 * @return 페이징된 주문 결과
 	 */
-	private Page<Result> readOrdersById(Pageable pageable, Long ownerId) {
+	private Page<Result.Single> readOrdersById(Pageable pageable, Long ownerId) {
 		return dtoFrom(orderRepository.findAllByOwnerId(pageable, ownerId));
 	}
 
@@ -97,7 +102,7 @@ public class OrderService {
 	 * @param condition 검색 조건 (주문 ID, 소유자 ID 등을 포함)
 	 * @return 페이징된 검색된 주문 결과
 	 */
-	public Page<Result> searchOrder(Pageable pageable, OrderSearchCondition condition) {
+	public Page<Result.Single> searchOrder(Pageable pageable, OrderSearchCondition condition) {
 		return dtoFrom(orderRepository.search(condition, pageable));
 	}
 
@@ -109,7 +114,7 @@ public class OrderService {
 	 * @return 업데이트된 주문 결과
 	 */
 	@Transactional
-	public Result putOrder(UUID id, Put putDto) {
+	public Result.Single putOrder(UUID id, Put putDto) {
 		Order order = repositoryHelper.findOrThrowNotFound(id);
 
 		return dtoFrom(orderRepository.save(putToEntity(putDto, order)));

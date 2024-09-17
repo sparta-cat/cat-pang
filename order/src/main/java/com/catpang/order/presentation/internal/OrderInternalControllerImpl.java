@@ -32,8 +32,8 @@ class OrderInternalControllerImpl implements OrderInternalController {
 	 * @return 성공적인 응답과 조회된 주문 정보
 	 */
 	@GetMapping("/{orderId}")
-	public ApiResponse.Success<Result> getOrder(@PathVariable UUID orderId) {
-		return ApiResponse.Success.<Result>builder()
+	public ApiResponse.Success<Result.Single> getOrder(@PathVariable UUID orderId) {
+		return ApiResponse.Success.<Result.Single>builder()
 			.result(orderService.readOrder(orderId))
 			.successCode(SELECT_SUCCESS)
 			.build();
