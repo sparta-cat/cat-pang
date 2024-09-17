@@ -17,9 +17,10 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.With;
 
+@With
 @Getter
-@Builder
 @Entity
 @Table(name = "p_orders")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -42,6 +43,12 @@ public class Order extends Timestamped {
 
 	@NotNull
 	private Long ownerId;
+
+	@Builder
+	public Order(UUID companyId, Long ownerId) {
+		this.companyId = companyId;
+		this.ownerId = ownerId;
+	}
 }
 
 
