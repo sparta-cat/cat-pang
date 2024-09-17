@@ -34,7 +34,7 @@ public class Order extends Timestamped {
 	@Setter
 	@NotNull
 	@Column(name = "total_quantity")
-	private Integer totalQuantity;
+	private Integer totalQuantity = 0;
 
 	@Setter
 	@NotNull

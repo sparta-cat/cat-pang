@@ -6,6 +6,7 @@ import java.util.UUID;
 
 import org.springframework.data.domain.Page;
 
+import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.PositiveOrZero;
 import lombok.Builder;
@@ -45,7 +46,8 @@ public interface OrderDto {
 
 	@With
 	@Builder
-	record Create(@NotNull @PositiveOrZero Integer totalQuantity, @NotNull UUID companyId, @NotNull Long ownerId) {
+	record Create(@NotNull UUID companyId, @NotNull Long ownerId,
+				  @NotEmpty List<OrderProductDto.Create> orderProductDtoes) {
 
 	}
 

@@ -40,7 +40,7 @@ public class OrderService {
 	 * @return 생성된 주문 결과
 	 */
 	@Transactional
-	public Result createOrder(Create createDto) {
+	public Result.With<OrderProductDto.Result> createOrder(Pageable pageable, Create createDto) {
 		UUID companyId = companyController.getCompany(createDto.companyId()).getResult().id();
 		Order order = entityFrom(createDto);
 		order.setCompanyId(companyId);

@@ -54,8 +54,8 @@ public class OrderController {
 	 */
 	@PreAuthorize("isAuthenticated()")
 	@PostMapping
-	public Result postOrder(@Valid @RequestBody Create dto) {
-		return orderService.createOrder(dto);
+	public Result.With<OrderProductDto.Result> postOrder(Pageable pageable, @Valid @RequestBody Create dto) {
+		return orderService.createOrder(pageable, dto);
 	}
 
 	/**

@@ -11,7 +11,6 @@ public class OrderMapper extends EntityMapper {
 	public static Order entityFrom(Create createDto) {
 		return Order.builder()
 			.companyId(createDto.companyId())
-			.totalQuantity(createDto.totalQuantity())
 			.ownerId(createDto.ownerId())
 			.build();
 	}
