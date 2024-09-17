@@ -48,6 +48,7 @@ public class OrderController {
 
 	/**
 	 * 새로운 주문을 생성하는 엔드포인트입니다.
+	 * 주문 생성
 	 *
 	 * @param dto 주문 생성 정보를 담은 DTO 객체
 	 * @return 생성된 주문 정보를 반환합니다.

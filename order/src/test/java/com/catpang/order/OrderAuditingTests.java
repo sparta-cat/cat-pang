@@ -39,7 +39,6 @@ class OrderAuditingTests {
 	 * 주문 생성 시, `CreatedBy` 및 `CreatedDate` 필드가 올바르게 설정되는지 테스트합니다.
 	 *
 	 * <p>
-	 * <b>Given</b>: 주문을 생성하기 위한 DTO 준비<br>
 	 * <b>When</b>: 주문을 저장<br>
 	 * <b>Then</b>: JPA Auditing 필드(`CreatedBy`, `CreatedAt`)가 올바르게 설정되는지 확인
 	 * </p>
