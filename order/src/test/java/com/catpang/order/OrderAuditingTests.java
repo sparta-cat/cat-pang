@@ -1,6 +1,7 @@
 package com.catpang.order;
 
 import static com.catpang.core.infrastructure.util.ArbitraryField.*;
+import static com.catpang.order.helper.OrderHelper.*;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.BDDMockito.*;
 
@@ -46,16 +47,8 @@ class OrderAuditingTests {
 	@Test
 	@DisplayName("주문 생성 시 CreatedBy, CreatedDate 필드가 올바르게 설정되는지 테스트")
 	void 주문_생성시_CreatedBy_CreatedDate_설정_테스트() {
-		// Given: 주문을 생성하기 위한 DTO 준비
-		Order order = Order.builder()
-			.id(UUID_ID)
-			.totalQuantity(PRICE)
-			.companyId(UUID_ID)
-			.ownerId(USER_ID)
-			.build();
-
 		// When: 주문을 저장
-		Order savedOrder = orderRepository.save(order);
+		Order savedOrder = orderRepository.save(anOrder());
 
 		// Then: JPA Auditing 필드가 올바르게 설정되었는지 확인
 		assertNotNull(savedOrder.getCreatedAt(), "CreatedAt 필드가 null이 아니어야 합니다.");
@@ -75,13 +68,7 @@ class OrderAuditingTests {
 	@DisplayName("주문 수정 시 LastModifiedBy, LastModifiedDate 필드가 올바르게 설정되는지 테스트")
 	void 주문_수정시_LastModifiedBy_LastModifiedDate_설정_테스트() {
 		// Given: 주문을 먼저 저장
-		Order order = Order.builder()
-			.id(UUID_ID)
-			.totalQuantity(PRICE)
-			.companyId(UUID_ID)
-			.ownerId(USER_ID)
-			.build();
-		Order savedOrder = orderRepository.save(order);
+		Order savedOrder = orderRepository.save(anOrder());
 
 		// When: 주문을 수정 (예: totalQuantity 변경)
 		savedOrder.setTotalQuantity(PRICE + 100);

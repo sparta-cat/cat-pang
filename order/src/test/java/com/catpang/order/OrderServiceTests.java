@@ -1,6 +1,10 @@
 package com.catpang.order;
 
+import static com.catpang.core.application.dto.OrderDto.*;
+import static com.catpang.core.codes.SuccessCode.*;
 import static com.catpang.core.infrastructure.util.ArbitraryField.*;
+import static com.catpang.order.helper.OrderHelper.*;
+import static com.catpang.order.helper.OrderProductHelper.*;
 import static org.hamcrest.MatcherAssert.*;
 import static org.hamcrest.Matchers.*;
 import static org.junit.jupiter.api.Assertions.*;
@@ -26,24 +30,29 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContext;
+import org.springframework.security.core.context.SecurityContextHolder;
 
 import com.catpang.core.application.dto.CompanyDto;
 import com.catpang.core.application.dto.OrderDto.Result.Single;
 import com.catpang.core.application.dto.OrderProductDto;
 import com.catpang.core.application.dto.ProductDto;
 import com.catpang.core.application.response.ApiResponse;
-import com.catpang.core.codes.SuccessCode;
 import com.catpang.core.infrastructure.util.H2DbCleaner;
+import com.catpang.core.presentation.controller.ProductInternalController;
 import com.catpang.order.application.service.OrderService;
 import com.catpang.order.domain.model.Order;
+import com.catpang.order.domain.model.OrderProduct;
+import com.catpang.order.domain.repository.OrderProductRepository;
 import com.catpang.order.domain.repository.OrderRepository;
 import com.catpang.order.domain.repository.OrderSearchCondition;
 import com.catpang.order.infrastructure.feign.FeignCompanyInternalController;
 
 import jakarta.persistence.EntityNotFoundException;
 
-@SpringBootTest(classes = {OrderApplication.class}, properties = {
-	"spring.cloud.config.enabled=false",    // Config 서버 비활성화
+@SpringBootTest(classes = {OrderApplication.class}, properties = {"spring.cloud.config.enabled=false",
+	// Config 서버 비활성화
 	"eureka.client.enabled=false"           // Eureka 클라이언트 비활성화
 })
 @ComponentScan(basePackages = {"com.catpang.order", "com.catpang.core"})
@@ -51,6 +60,9 @@ class OrderServiceTests {
 
 	@MockBean
 	private FeignCompanyInternalController companyController;
+
+	@MockBean
+	private ProductInternalController productController;
 
 	@Autowired
 	private DataSource dataSource;
@@ -72,7 +84,7 @@ class OrderServiceTests {
 
 		ApiResponse.Success<CompanyDto.Result> companyResponse = ApiResponse.Success.<CompanyDto.Result>builder()
 			.result(companyResult)
-			.successCode(SuccessCode.SELECT_SUCCESS)
+			.successCode(SELECT_SUCCESS)
 			.build();
 
 		// Mocking FeignClient 호출
@@ -85,24 +97,9 @@ class OrderServiceTests {
 	private void saveTestOrdersWithOwnerId(Long ownerId) {
 		List<Order> orders = new ArrayList<>();
 		for (int i = 0; i < 5; i++) {
-			orders.add(Order.builder()
-				.id(UUID_ID)
-				.totalQuantity(PRICE + i)
-				.ownerId(ownerId)
-				.companyId(UUID_ID)
-				.build());
+			orders.add(anOrder().withOwnerId(ownerId).withTotalQuantity(PRICE + i));
 		}
 		orderRepository.saveAll(orders);
-	}
-
-	// TODO: 반드시 helper 클래스로 리펙토링 할 것
-	private Order anOrder() {
-		return Order.builder()
-			.id(UUID_ID)
-			.totalQuantity(PRICE)
-			.ownerId(USER_ID)
-			.companyId(UUID_ID)
-			.build();
 	}
 
 	/**
@@ -197,9 +194,7 @@ class OrderServiceTests {
 			saveTestOrdersWithOwnerId(USER_ID);
 			Pageable pageable = PageRequest.of(0, 10);
 
-			OrderSearchCondition condition = OrderSearchCondition.builder()
-				.ownerIds(List.of(USER_ID, 2L))
-				.build();
+			OrderSearchCondition condition = OrderSearchCondition.builder().ownerIds(List.of(USER_ID, 2L)).build();
 
 			// When
 			Page<Single> resultPage = orderService.searchOrder(pageable, condition);
@@ -215,9 +210,7 @@ class OrderServiceTests {
 			saveTestOrdersWithOwnerId(USER_ID);
 			Pageable pageable = PageRequest.of(0, 10, by(ASC, "totalQuantity"));
 
-			OrderSearchCondition condition = OrderSearchCondition.builder()
-				.ownerIds(List.of(USER_ID, 2L))
-				.build();
+			OrderSearchCondition condition = OrderSearchCondition.builder().ownerIds(List.of(USER_ID, 2L)).build();
 
 			// When
 			Page<Single> resultPage = orderService.searchOrder(pageable, condition);
