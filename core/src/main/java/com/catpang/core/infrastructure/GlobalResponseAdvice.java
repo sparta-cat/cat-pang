@@ -47,15 +47,16 @@ public class GlobalResponseAdvice implements ResponseBodyAdvice<Object> {
 		org.springframework.http.server.ServerHttpRequest request,
 		org.springframework.http.server.ServerHttpResponse response) {
 
-		if (body instanceof ApiResponse.Success) {
-			return body; // 이미 감싸져 있는 경우 그대로 반환
+		// ApiResponse.Success나 ApiResponse.Error로 이미 포장된 경우 그대로 반환
+		if (body instanceof ApiResponse) {
+			return body;
 		}
 
 		// 기본 응답을 ApiResponse.Success로 감싸서 반환
-		ApiResponse.Success<Object> build = ApiResponse.Success.builder()
+		ApiResponse.Success<Object> successResponse = ApiResponse.Success.builder()
 			.result(body)
 			.successCode(SuccessCode.SELECT_SUCCESS)
 			.build();
-		return build;
+		return successResponse;
 	}
 }
