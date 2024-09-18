@@ -15,13 +15,13 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.catpang.core.application.dto.ProductDto;
 import com.catpang.core.exception.CustomException;
-import com.catpang.core.presentation.controller.ProductInternalController;
 import com.catpang.order.domain.model.Order;
 import com.catpang.order.domain.model.OrderProduct;
 import com.catpang.order.domain.repository.OrderProductRepository;
 import com.catpang.order.domain.repository.OrderProductRepositoryHelper;
 import com.catpang.order.domain.repository.OrderProductSearchCondition;
 import com.catpang.order.domain.repository.OrderRepositoryHelper;
+import com.catpang.order.infrastructure.feign.FeignProductInternalController;
 
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
@@ -34,7 +34,7 @@ public class OrderProductService {
 	private final OrderProductRepository orderProductRepository;
 	private final OrderProductRepositoryHelper orderProductRepositoryHelper;
 	private final OrderRepositoryHelper orderRepositoryHelper;
-	private final ProductInternalController productController;
+	private final FeignProductInternalController productController;
 
 	/**
 	 * 새로운 주문상품을 생성하는 메서드
