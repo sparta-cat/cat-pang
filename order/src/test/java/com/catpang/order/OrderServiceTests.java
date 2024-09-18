@@ -39,6 +39,7 @@ import com.catpang.core.application.dto.OrderDto.Result.Single;
 import com.catpang.core.application.dto.OrderProductDto;
 import com.catpang.core.application.dto.ProductDto;
 import com.catpang.core.application.response.ApiResponse;
+import com.catpang.core.exception.CustomException;
 import com.catpang.core.infrastructure.util.H2DbCleaner;
 import com.catpang.core.presentation.controller.ProductInternalController;
 import com.catpang.order.application.service.OrderService;
@@ -137,8 +138,9 @@ class OrderServiceTests {
 		void 유효한_데이터로_주문_생성시_성공() {
 			// Given
 			Create createOrderDto = Create.builder()
-				.companyId(COMPANY_ID)
+				.orderCompanyId(ORDER_COMPANY_ID)
 				.ownerId(USER_ID)
+				.produceCompanyId(COMPANY_ID)
 				.orderProductDtoes(
 					List.of(anOrderProductCreateDto(), anOrderProductCreateDto(), anOrderProductCreateDto()))
 				.build();
@@ -148,8 +150,56 @@ class OrderServiceTests {
 
 			// Then
 			assertNotNull(result);
-			assertEquals(COMPANY_ID, result.companyId());
+			assertEquals(ORDER_COMPANY_ID, result.orderCompanyId());
+			assertEquals(COMPANY_ID, result.produceCompanyId());
 			assertEquals(USER_ID, result.ownerId());
+		}
+
+		@Test
+		void 제품의_업체ID가_주문_업체ID와_일치하지_않아_ProductCompanyMismatchException_발생() {
+			// Given
+			Create createOrderDto = Create.builder()
+				.orderCompanyId(ORDER_COMPANY_ID) // 주문의 업체 ID
+				.ownerId(USER_ID)
+				.produceCompanyId(COMPANY_ID) // 주문 생성 시 업체 ID
+				.orderProductDtoes(
+					List.of(anOrderProductCreateDto(), anOrderProductCreateDto(), anOrderProductCreateDto()))
+				.build();
+
+			// Mocking: 첫 번째 product는 주문의 업체 ID와 일치하고, 두 번째 product는 다른 업체 ID를 가지도록 설정
+			ProductDto.Result validProductResult = ProductDto.Result.builder()
+				.id(PRODUCT_ID)
+				.name(PRODUCT_NAME)
+				.price(PRICE)
+				.companyId(COMPANY_ID) // 주문의 업체 ID와 일치
+				.build();
+
+			ProductDto.Result invalidProductResult = ProductDto.Result.builder()
+				.id(PRODUCT_ID)
+				.name(PRODUCT_NAME)
+				.price(PRICE)
+				.companyId(UUID.randomUUID()) // 다른 업체 ID
+				.build();
+
+			// Mock Product 호출
+			given(productController.getProduct(any(UUID.class)))
+				.willReturn(ApiResponse.Success.<ProductDto.Result>builder()
+					.successCode(SELECT_SUCCESS)
+					.result(validProductResult)
+					.build())
+				.willReturn(ApiResponse.Success.<ProductDto.Result>builder()
+					.successCode(SELECT_SUCCESS)
+					.result(invalidProductResult)
+					.build());
+
+			// When & Then
+			CustomException.ProductCompanyMismatchException exception = assertThrows(
+				CustomException.ProductCompanyMismatchException.class, () -> {
+					orderService.createOrder(Pageable.unpaged(), createOrderDto);
+				});
+
+			assertEquals(String.format("Order company ID (%s) does not match Product company ID (%s)",
+				COMPANY_ID, invalidProductResult.companyId()), exception.getMessage());
 		}
 	}
 

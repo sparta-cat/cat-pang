@@ -41,14 +41,14 @@ public class OrderService {
 	 */
 	@Transactional
 	public Result.With<OrderProductDto.Result> createOrder(Pageable pageable, Create createDto) {
-		UUID companyId = companyController.getCompany(createDto.companyId()).getResult().id();
+		UUID orderCompanyId = companyController.getCompany(createDto.orderCompanyId()).getResult().id();
+		UUID produceCompanyId = companyController.getCompany(createDto.produceCompanyId()).getResult().id();
 		Order order = entityFrom(createDto);
-		order.setCompanyId(companyId);
 
 		order = orderRepository.save(order);
 		Page<OrderProductDto.Result> orderProductResults =
 			orderProductService.createOrderProducts(pageable,
-				createDto.orderProductDtoes(), order.getId());
+				createDto.orderProductDtoes(), order.getId(), produceCompanyId);
 
 		Integer totalQuantity = order.getTotalQuantity();
 		totalQuantity += orderProductResults.stream()

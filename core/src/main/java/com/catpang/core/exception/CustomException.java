@@ -1,5 +1,7 @@
 package com.catpang.core.exception;
 
+import java.util.UUID;
+
 import com.catpang.core.codes.ErrorCode;
 
 import lombok.Getter;
@@ -73,6 +75,27 @@ public class CustomException extends RuntimeException {
 		 */
 		public InvalidIdFormatException(String id) {
 			super(ErrorCode.INVALID_TYPE_VALUE, String.format("Invalid ID format: %s", id));
+		}
+	}
+
+	/**
+	 * [제품 업체 불일치 예외 클래스]
+	 * 주문의 제품들이 동일한 업체에 속하지 않는 경우 발생하는 예외 클래스.
+	 * 이 예외는 주문의 `produceCompanyId`와 각 `OrderProduct`의 `companyId`가 불일치할 때 발생한다.
+	 */
+	@Getter
+	public static class ProductCompanyMismatchException extends CustomException {
+
+		/**
+		 * 주문의 업체 ID와 제품의 업체 ID가 일치하지 않을 때 발생하는 예외 생성자.
+		 *
+		 * @param produceCompanyId  주문의 업체 ID
+		 * @param productCompanyId  제품의 업체 ID
+		 */
+		public ProductCompanyMismatchException(UUID produceCompanyId, UUID productCompanyId) {
+			super(ErrorCode.COMPANY_MISMATCH,
+				String.format("Order company ID (%s) does not match Product company ID (%s)",
+					produceCompanyId, productCompanyId));
 		}
 	}
 }
