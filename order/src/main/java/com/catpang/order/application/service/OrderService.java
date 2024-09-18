@@ -48,7 +48,7 @@ public class OrderService {
 		order = orderRepository.save(order);
 		Page<OrderProductDto.Result> orderProductResults =
 			orderProductService.createOrderProducts(pageable,
-				createDto.orderProductDtoes(), order.getId());
+				createDto.orderProductDtoes(), order.getId(), produceCompanyId);
 
 		Integer totalQuantity = order.getTotalQuantity();
 		totalQuantity += orderProductResults.stream()

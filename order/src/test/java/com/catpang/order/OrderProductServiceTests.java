@@ -96,7 +96,7 @@ class OrderProductServiceTests {
 
 			// When
 			Page<Result> results = orderProductService.createOrderProducts(Pageable.unpaged(), List.of(createDto),
-				order.getId());
+				order.getId(), COMPANY_ID);
 
 			// Then
 			OrderProduct found = orderProductRepository.findById(results.getContent().get(0).id())
