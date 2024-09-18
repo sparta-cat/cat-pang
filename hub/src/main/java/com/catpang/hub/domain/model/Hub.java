@@ -23,6 +23,7 @@ import lombok.Setter;
  * PostgreSQL의 UUID 타입과 매핑됩니다.
  */
 @Getter
+@Setter
 @Builder
 @Entity
 @Table(name = "hubs")
