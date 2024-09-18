@@ -1,0 +1,14 @@
+plugins {
+    id 'catpang.java-conventions'
+    id 'catpang.spring-conventions'
+    id 'catpang.spring-cloud-conventions'
+    id 'org.springframework.boot'
+}
+
+dependencies {
+    implementation 'org.springframework.boot:spring-boot-starter-actuator'
+    implementation 'org.springframework.cloud:spring-cloud-starter-gateway'
+    implementation 'org.springframework.cloud:spring-cloud-starter-netflix-eureka-client'
+    implementation 'org.springframework.cloud:spring-cloud-starter-openfeign'
+
+}
