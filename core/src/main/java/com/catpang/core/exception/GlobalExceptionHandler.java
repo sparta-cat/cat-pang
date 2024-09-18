@@ -1,9 +1,11 @@
 package com.catpang.core.exception;
 
 import static com.catpang.core.application.response.ApiResponse.Error;
+import static org.springframework.http.HttpStatus.*;
 
 import java.nio.file.AccessDeniedException;
 
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.validation.BindingResult;
@@ -101,8 +103,7 @@ public class GlobalExceptionHandler {
 			// ResponseStatusException 발생 시 예외 처리
 		} else if (ex instanceof ResponseStatusException) {
 			message = ((ResponseStatusException)ex).getReason();
-			errorCode = ErrorCode.NOT_FOUND;
-
+			errorCode = mapHttpStatusToErrorCode((HttpStatus)((ResponseStatusException)ex).getStatusCode());
 			// CustomException 처리
 		} else if (ex instanceof CustomException) {
 			errorCode = ((CustomException)ex).getErrorCode();
@@ -113,6 +114,27 @@ public class GlobalExceptionHandler {
 		}
 
 		return new ExceptionDetails(errorCode, message, bindingResult);
+	}
+
+	/**
+	 * HTTP 상태 코드를 적절한 ErrorCode로 매핑하는 메서드
+	 * @param status HTTP 상태 코드
+	 * @return 대응하는 ErrorCode
+	 */
+	private ErrorCode mapHttpStatusToErrorCode(HttpStatus status) {
+		if (status == BAD_REQUEST) {
+			return ErrorCode.BAD_REQUEST;
+		} else if (status == UNAUTHORIZED) {
+			return ErrorCode.UNAUTHORIZED;
+		} else if (status == FORBIDDEN) {
+			return ErrorCode.FORBIDDEN;
+		} else if (status == NOT_FOUND) {
+			return ErrorCode.NOT_FOUND;
+		} else if (status == INTERNAL_SERVER_ERROR) {
+			return ErrorCode.INTERNAL_SERVER_ERROR;
+		} else {
+			return ErrorCode.INTERNAL_SERVER_ERROR; // 기본 처리
+		}
 	}
 
 	/**
