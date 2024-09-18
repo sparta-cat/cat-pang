@@ -17,8 +17,11 @@ public abstract class ArbitraryField {
 	/** Order의 총 수량 */
 	public static final Integer TOTAL_QUANTITY = 87;
 
-	/** 회사 ID */
+	/**  회사 ID */
 	public static final UUID COMPANY_ID = UUID.fromString("8a7f60a7-5463-4674-837e-70bf223a9294");
+
+	/** 주문한 회사 ID */
+	public static final UUID ORDER_COMPANY_ID = UUID.fromString("f71f0b2e-c9ac-4771-b6cd-d189e3dd2712");
 
 	/** 주문 소유자 ID */
 	public static final Long OWNER_ID = 99L;

@@ -137,7 +137,7 @@ class OrderServiceTests {
 		void 유효한_데이터로_주문_생성시_성공() {
 			// Given
 			Create createOrderDto = Create.builder()
-				.companyId(COMPANY_ID)
+				.orderCompanyId(ORDER_COMPANY_ID)
 				.ownerId(USER_ID)
 				.orderProductDtoes(
 					List.of(anOrderProductCreateDto(), anOrderProductCreateDto(), anOrderProductCreateDto()))
@@ -148,7 +148,7 @@ class OrderServiceTests {
 
 			// Then
 			assertNotNull(result);
-			assertEquals(COMPANY_ID, result.companyId());
+			assertEquals(ORDER_COMPANY_ID, result.orderCompanyId());
 			assertEquals(USER_ID, result.ownerId());
 		}
 	}

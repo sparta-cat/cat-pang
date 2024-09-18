@@ -95,15 +95,16 @@ class OrderProductServiceTests {
 			Create createDto = anOrderProductCreateDto();
 
 			// When
-			Result result = orderProductService.createOrderProduct(createDto, order.getId());
+			Page<Result> results = orderProductService.createOrderProducts(Pageable.unpaged(), List.of(createDto),
+				order.getId());
 
 			// Then
-			OrderProduct found = orderProductRepository.findById(result.id())
+			OrderProduct found = orderProductRepository.findById(results.getContent().get(0).id())
 				.orElseThrow(EntityNotFoundException::new);
 
 			// 검증: ID가 존재하는지 확인
-			assertThat(result, is(notNullValue()));
-			assertThat(found.getId(), is(equalTo(result.id())));
+			assertThat(results, is(notNullValue()));
+			assertThat(found.getId(), is(equalTo(results.getContent().get(0).id())));
 
 			// OrderProduct가 Order를 참조하는지 확인
 			assertThat(found.getOrder(), is(notNullValue()));

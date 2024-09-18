@@ -10,7 +10,7 @@ public class OrderHelper {
 	public static Order anOrder() {
 		return Order.builder()
 			.ownerId(OWNER_ID)
-			.companyId(COMPANY_ID)
+			.orderCompanyId(ORDER_COMPANY_ID)
 			.build()
 			.withId(ORDER_ID);
 	}
@@ -28,7 +28,7 @@ public class OrderHelper {
 	public static Result.Single anOrderResultDto() {
 		return Result.Single.builder()
 			.id(ORDER_ID)
-			.companyId(COMPANY_ID)
+			.orderCompanyId(ORDER_COMPANY_ID)
 			.ownerId(OWNER_ID)
 			.totalQuantity(TOTAL_QUANTITY)
 			.build();

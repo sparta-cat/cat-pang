@@ -39,14 +39,14 @@ public class Order extends Timestamped {
 
 	@Setter
 	@NotNull
-	private UUID companyId;
+	private UUID orderCompanyId;
 
 	@NotNull
 	private Long ownerId;
 
 	@Builder
-	public Order(UUID companyId, Long ownerId) {
-		this.companyId = companyId;
+	public Order(UUID orderCompanyId, Long ownerId) {
+		this.orderCompanyId = orderCompanyId;
 		this.ownerId = ownerId;
 	}
 }

@@ -10,7 +10,7 @@ import com.catpang.order.domain.model.Order;
 public class OrderMapper extends EntityMapper {
 	public static Order entityFrom(Create createDto) {
 		return Order.builder()
-			.companyId(createDto.companyId())
+			.orderCompanyId(createDto.orderCompanyId())
 			.ownerId(createDto.ownerId())
 			.build();
 	}
@@ -18,7 +18,7 @@ public class OrderMapper extends EntityMapper {
 	public static Result.Single dtoFrom(Order order) {
 		return Result.Single.builder()
 			.id(order.getId())
-			.companyId(order.getCompanyId())
+			.orderCompanyId(order.getOrderCompanyId())
 			.totalQuantity(order.getTotalQuantity())
 			.ownerId(order.getOwnerId())
 			.build();
@@ -44,7 +44,7 @@ public class OrderMapper extends EntityMapper {
 	public static <R> Result.With<R> dtoFrom(Order order, Page<R> results) {
 		return Result.With.<R>builder()
 			.id(order.getId())
-			.companyId(order.getCompanyId())
+			.orderCompanyId(order.getOrderCompanyId())
 			.totalQuantity(order.getTotalQuantity())
 			.ownerId(order.getOwnerId())
 			.results(results)
