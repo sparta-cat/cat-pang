@@ -27,14 +27,15 @@ public interface OrderDto {
 	interface Result {
 		@lombok.With
 		@Builder
-		record Single(UUID id, Integer totalQuantity, UUID companyId, Long ownerId
+		record Single(UUID id, Integer totalQuantity, UUID orderCompanyId, Long ownerId, UUID produceCompanyId
 
 		) {
 
 		}
 
 		@Builder
-		record With<R>(UUID id, Integer totalQuantity, UUID companyId, Long ownerId, Page<R> results) {
+		record With<R>(UUID id, Integer totalQuantity, UUID orderCompanyId, Long ownerId, UUID produceCompanyId,
+					   Page<R> results) {
 
 		}
 	}
@@ -46,7 +47,7 @@ public interface OrderDto {
 
 	@With
 	@Builder
-	record Create(@NotNull UUID companyId, @NotNull Long ownerId,
+	record Create(@NotNull UUID orderCompanyId, @NotNull Long ownerId, @NotNull UUID produceCompanyId,
 				  @NotEmpty List<OrderProductDto.Create> orderProductDtoes) {
 
 	}

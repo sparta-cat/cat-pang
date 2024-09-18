@@ -13,6 +13,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.catpang.core.application.dto.ProductDto;
+import com.catpang.core.exception.CustomException;
 import com.catpang.core.presentation.controller.ProductInternalController;
 import com.catpang.order.domain.model.Order;
 import com.catpang.order.domain.model.OrderProduct;
@@ -37,16 +39,20 @@ public class OrderProductService {
 	/**
 	 * 새로운 주문상품을 생성하는 메서드
 	 *
-	 * @param createDto 주문상품 생성 정보
+	 * @param createDto        주문상품 생성 정보
+	 * @param produceCompanyId 주문을 요청할 업체 ID
 	 * @return 생성된 주문상품 결과
 	 */
 	@Transactional
-	public Result createOrderProduct(Create createDto, UUID orderId) {
-		UUID productId = productController.getProduct(createDto.productId()).getResult().id();
+	public Result createOrderProduct(Create createDto, UUID orderId, UUID produceCompanyId) {
+		ProductDto.Result result = productController.getProduct(createDto.productId()).getResult();
+		if (!result.companyId().equals(produceCompanyId)) {
+			throw new CustomException.ProductCompanyMismatchException(produceCompanyId, result.companyId());
+		}
 		Order order = orderRepositoryHelper.findOrThrowNotFound(orderId);
 		OrderProduct orderProduct = entityFrom(createDto);
 		orderProduct.setOrder(order);
-		orderProduct.setProductId(productId);
+		orderProduct.setProductId(result.id());
 
 		return dtoFrom(orderProductRepository.save(orderProduct));
 	}
@@ -54,14 +60,16 @@ public class OrderProductService {
 	/**
 	 * 새로운 주문상품을 생성하는 메서드
 	 *
-	 * @param createDtoes 주문상품들 생성 정보
+	 * @param createDtoes      주문상품들 생성 정보
+	 * @param produceCompanyId
 	 * @return 생성된 주문상품 결과
 	 */
 	@Transactional
-	public Page<Result> createOrderProducts(Pageable pageable, List<Create> createDtoes, UUID orderId) {
+	public Page<Result> createOrderProducts(Pageable pageable, List<Create> createDtoes, UUID orderId,
+		UUID produceCompanyId) {
 		// createDtoes 리스트를 stream으로 열고, 각 createDto에 대해 createOrderProduct 호출
 		List<Result> results = createDtoes.stream()
-			.map(createDto -> createOrderProduct(createDto, orderId)) // 각 Create에 대해 처리
+			.map(createDto -> createOrderProduct(createDto, orderId, produceCompanyId)) // 각 Create에 대해 처리
 			.collect(Collectors.toList());
 		return new PageImpl<>(results, pageable, results.size());
 	}

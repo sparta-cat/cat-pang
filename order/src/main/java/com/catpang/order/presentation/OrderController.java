@@ -55,7 +55,9 @@ public class OrderController {
 	 */
 	@PreAuthorize("isAuthenticated()")
 	@PostMapping
-	public Result.With<OrderProductDto.Result> postOrder(Pageable pageable, @Valid @RequestBody Create dto) {
+	public Result.With<OrderProductDto.Result> postOrder(Pageable pageable, @Valid @RequestBody Create dto,
+		@AuthenticationPrincipal UserDetails userDetails) {
+		orderAuthService.requireCompanyOwner(userDetails, dto.orderCompanyId());
 		return orderService.createOrder(pageable, dto);
 	}
 
