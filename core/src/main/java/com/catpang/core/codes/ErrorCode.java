@@ -64,6 +64,9 @@ public enum ErrorCode implements ResponseCode, Serializable {
 	// 권한 없음 (401 Unauthorized)
 	UNAUTHORIZED(HttpStatus.UNAUTHORIZED, "G013", "Unauthorized"),
 
+	// 업체와 상품간 ID 불일치
+	COMPANY_MISMATCH(HttpStatus.BAD_REQUEST, "G014", "Company mismatch between order and product"),
+
 	// 서버가 처리 할 방법을 모르는 경우 발생
 	INTERNAL_SERVER_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "G999", "Internal Server Error Exception"),
 
