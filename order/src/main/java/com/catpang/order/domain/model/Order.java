@@ -44,10 +44,14 @@ public class Order extends Timestamped {
 	@NotNull
 	private Long ownerId;
 
+	@NotNull
+	private UUID produceCompanyId;
+
 	@Builder
-	public Order(UUID orderCompanyId, Long ownerId) {
+	public Order(UUID orderCompanyId, Long ownerId, UUID produceCompanyId) {
 		this.orderCompanyId = orderCompanyId;
 		this.ownerId = ownerId;
+		this.produceCompanyId = produceCompanyId;
 	}
 }
 

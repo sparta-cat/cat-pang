@@ -42,6 +42,7 @@ public class OrderService {
 	@Transactional
 	public Result.With<OrderProductDto.Result> createOrder(Pageable pageable, Create createDto) {
 		UUID orderCompanyId = companyController.getCompany(createDto.orderCompanyId()).getResult().id();
+		UUID produceCompanyId = companyController.getCompany(createDto.produceCompanyId()).getResult().id();
 		Order order = entityFrom(createDto);
 
 		order = orderRepository.save(order);

@@ -139,6 +139,7 @@ class OrderServiceTests {
 			Create createOrderDto = Create.builder()
 				.orderCompanyId(ORDER_COMPANY_ID)
 				.ownerId(USER_ID)
+				.produceCompanyId(COMPANY_ID)
 				.orderProductDtoes(
 					List.of(anOrderProductCreateDto(), anOrderProductCreateDto(), anOrderProductCreateDto()))
 				.build();
@@ -149,6 +150,7 @@ class OrderServiceTests {
 			// Then
 			assertNotNull(result);
 			assertEquals(ORDER_COMPANY_ID, result.orderCompanyId());
+			assertEquals(COMPANY_ID, result.produceCompanyId());
 			assertEquals(USER_ID, result.ownerId());
 		}
 	}

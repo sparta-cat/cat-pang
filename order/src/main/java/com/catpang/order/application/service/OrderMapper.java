@@ -11,6 +11,7 @@ public class OrderMapper extends EntityMapper {
 	public static Order entityFrom(Create createDto) {
 		return Order.builder()
 			.orderCompanyId(createDto.orderCompanyId())
+			.produceCompanyId(createDto.produceCompanyId())
 			.ownerId(createDto.ownerId())
 			.build();
 	}
@@ -19,6 +20,7 @@ public class OrderMapper extends EntityMapper {
 		return Result.Single.builder()
 			.id(order.getId())
 			.orderCompanyId(order.getOrderCompanyId())
+			.produceCompanyId(order.getProduceCompanyId())
 			.totalQuantity(order.getTotalQuantity())
 			.ownerId(order.getOwnerId())
 			.build();
@@ -45,6 +47,7 @@ public class OrderMapper extends EntityMapper {
 		return Result.With.<R>builder()
 			.id(order.getId())
 			.orderCompanyId(order.getOrderCompanyId())
+			.produceCompanyId(order.getProduceCompanyId())
 			.totalQuantity(order.getTotalQuantity())
 			.ownerId(order.getOwnerId())
 			.results(results)
