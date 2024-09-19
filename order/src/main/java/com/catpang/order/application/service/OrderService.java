@@ -10,7 +10,10 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.catpang.core.application.dto.CompanyDto;
+import com.catpang.core.application.dto.DeliveryDto;
 import com.catpang.core.application.dto.OrderProductDto;
+import com.catpang.delivery.application.service.DeliveryService;
 import com.catpang.order.domain.model.Order;
 import com.catpang.order.domain.model.OrderProduct;
 import com.catpang.order.domain.repository.OrderProductRepository;
@@ -32,6 +35,7 @@ public class OrderService {
 	private final OrderProductRepository orderProductRepository;
 	private final FeignCompanyInternalController companyController;
 	private final OrderProductService orderProductService;
+	private final DeliveryService deliveryService;
 
 	/**
 	 * 새로운 주문을 생성하는 메서드
@@ -41,8 +45,10 @@ public class OrderService {
 	 */
 	@Transactional
 	public Result.With<OrderProductDto.Result> createOrder(Pageable pageable, Create createDto) {
-		UUID orderCompanyId = companyController.getCompany(createDto.orderCompanyId()).getResult().id();
-		UUID produceCompanyId = companyController.getCompany(createDto.produceCompanyId()).getResult().id();
+		CompanyDto.Result orderCompany = companyController.getCompany(createDto.orderCompanyId()).getResult();
+		UUID orderCompanyId = orderCompany.id();
+		CompanyDto.Result produceCompany = companyController.getCompany(createDto.produceCompanyId()).getResult();
+		UUID produceCompanyId = produceCompany.id();
 		Order order = entityFrom(createDto);
 
 		order = orderRepository.save(order);
@@ -55,6 +61,17 @@ public class OrderService {
 			.mapToInt(OrderProductDto.Result::quantity).sum();
 
 		order.setTotalQuantity(totalQuantity);
+
+		// Delivery 생성 호출 (DeliveryService)
+		DeliveryDto.Create deliveryCreateDto = DeliveryDto.Create.builder()
+			.orderId(order.getId())
+			.departureHubId(produceCompany.hubId())
+			.destinationHubId(orderCompany.hubId())
+			.receiveCompanyId(orderCompanyId)
+			.receiverId(createDto.ownerId())
+			.orderId(order.getId())
+			.build();
+		deliveryService.createDelivery(deliveryCreateDto);  // DeliveryService 호출
 
 		return dtoFrom(order, orderProductResults);
 	}
