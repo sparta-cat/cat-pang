@@ -18,6 +18,12 @@ spring:
         dialect: org.hibernate.dialect.PostgreSQLDialect
         format_sql: true
         highlight_sql: true
+  data:
+    redis:
+      host: ${REDIS_DOMAIN}
+      port: ${REDIS_PORT}
+      password: ${REDIS_PASSWORD}
+
 
 eureka:
   client:
@@ -32,3 +38,16 @@ springdoc:
 logging.level:
   org.hibernate.SQL: debug
   org.hibernate.type: trace
+
+jwt:
+  secret:
+    key: ${JWT_SECRET_KEY}
+  refresh:
+    secret:
+      key: ${JWT_REFRESH_SECRET_KEY}
+
+slack:
+  bot:
+    token: ${SLACK_BOT_TOKEN}
+  channel:
+    id: ${SLACK_CHANNEL_ID}
