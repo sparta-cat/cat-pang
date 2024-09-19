@@ -1,7 +1,9 @@
 server:
-  port: ${HUB_PORT}
+  port: ${COMPANY_PORT}
 
 spring:
+  main:
+    allow-bean-definition-overriding: true
   cloud:
     config:
       enabled: false  # Config 서버 사용 안함
