@@ -34,13 +34,16 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 
+import com.catpang.OrderApplication;
 import com.catpang.core.application.dto.CompanyDto;
+import com.catpang.core.application.dto.DeliveryDto;
 import com.catpang.core.application.dto.OrderDto.Result.Single;
 import com.catpang.core.application.dto.OrderProductDto;
 import com.catpang.core.application.dto.ProductDto;
 import com.catpang.core.application.response.ApiResponse;
 import com.catpang.core.exception.CustomException;
 import com.catpang.core.infrastructure.util.H2DbCleaner;
+import com.catpang.delivery.application.service.DeliveryService;
 import com.catpang.order.application.service.OrderService;
 import com.catpang.order.domain.model.Order;
 import com.catpang.order.domain.model.OrderProduct;
@@ -73,6 +76,9 @@ class OrderServiceTests {
 
 	@Autowired
 	private OrderService orderService;
+
+	@MockBean
+	private DeliveryService deliveryService;
 
 	@BeforeEach
 	void setUp() throws SQLException {
@@ -115,6 +121,8 @@ class OrderServiceTests {
 			.result(productResult)
 			.build();
 		given(productController.getProduct(any(UUID.class))).willReturn(productResponse);
+
+		given(deliveryService.createDelivery(any(DeliveryDto.Create.class))).willReturn(null);
 
 		H2DbCleaner.clean(dataSource);
 	}

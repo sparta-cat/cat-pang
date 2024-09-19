@@ -30,6 +30,7 @@ public interface CompanyDto {
 		UUID id,
 		String name,
 		String type,
-		AddressDto.Result address
+		AddressDto.Result address,
+    UUID hubId
 	) {}
 }
