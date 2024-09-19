@@ -55,7 +55,7 @@ public class Delivery extends Timestamped {
 	@Setter
 	@NotNull
 	@Enumerated(EnumType.STRING)
-	private DeliveryStatus status = WAITING_FOR_TRANSPORT;
+	private DeliveryStatus status = OUT_FOR_DELIVERY;
 
 	@NotNull
 	private UUID departureHubId;
