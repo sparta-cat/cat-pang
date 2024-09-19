@@ -1,21 +1,16 @@
 package com.catpang.order;
 
-import static com.catpang.core.application.dto.OrderProductDto.*;
-import static com.catpang.core.codes.SuccessCode.*;
-import static com.catpang.core.infrastructure.util.ArbitraryField.*;
-import static com.catpang.order.helper.OrderHelper.*;
-import static com.catpang.order.helper.OrderProductHelper.*;
-import static org.hamcrest.MatcherAssert.*;
-import static org.hamcrest.Matchers.*;
-import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.BDDMockito.*;
-
-import java.util.List;
-import java.util.UUID;
-
-import javax.sql.DataSource;
-
+import com.catpang.core.application.dto.ProductDto;
+import com.catpang.core.application.response.ApiResponse;
+import com.catpang.core.infrastructure.util.H2DbCleaner;
+import com.catpang.order.application.service.OrderProductService;
+import com.catpang.order.domain.model.Order;
+import com.catpang.order.domain.model.OrderProduct;
+import com.catpang.order.domain.repository.OrderProductRepository;
+import com.catpang.order.domain.repository.OrderProductSearchCondition;
+import com.catpang.order.domain.repository.OrderRepository;
+import com.catpang.order.infrastructure.feign.FeignProductInternalController;
+import jakarta.persistence.EntityNotFoundException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -27,18 +22,22 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 
-import com.catpang.core.application.dto.ProductDto;
-import com.catpang.core.application.response.ApiResponse;
-import com.catpang.core.infrastructure.util.H2DbCleaner;
-import com.catpang.core.presentation.controller.ProductInternalController;
-import com.catpang.order.application.service.OrderProductService;
-import com.catpang.order.domain.model.Order;
-import com.catpang.order.domain.model.OrderProduct;
-import com.catpang.order.domain.repository.OrderProductRepository;
-import com.catpang.order.domain.repository.OrderProductSearchCondition;
-import com.catpang.order.domain.repository.OrderRepository;
+import javax.sql.DataSource;
+import java.util.List;
+import java.util.UUID;
 
-import jakarta.persistence.EntityNotFoundException;
+import static com.catpang.core.application.dto.OrderProductDto.Create;
+import static com.catpang.core.application.dto.OrderProductDto.Result;
+import static com.catpang.core.codes.SuccessCode.SELECT_SUCCESS;
+import static com.catpang.core.infrastructure.util.ArbitraryField.*;
+import static com.catpang.order.helper.OrderHelper.anOrder;
+import static com.catpang.order.helper.OrderProductHelper.anOrderProduct;
+import static com.catpang.order.helper.OrderProductHelper.anOrderProductCreateDto;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.*;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.BDDMockito.given;
 
 @SpringBootTest(classes = {OrderApplication.class}, properties = {
 	"spring.cloud.config.enabled=false",
@@ -48,7 +47,7 @@ import jakarta.persistence.EntityNotFoundException;
 class OrderProductServiceTests {
 
 	@MockBean
-	private ProductInternalController productController;
+	private FeignProductInternalController productController;
 
 	@Autowired
 	private DataSource dataSource;

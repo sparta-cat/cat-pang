@@ -1,25 +1,21 @@
 package com.catpang.order;
 
-import static com.catpang.core.application.dto.OrderDto.*;
-import static com.catpang.core.codes.SuccessCode.*;
-import static com.catpang.core.infrastructure.util.ArbitraryField.*;
-import static com.catpang.order.helper.OrderHelper.*;
-import static com.catpang.order.helper.OrderProductHelper.*;
-import static org.hamcrest.MatcherAssert.*;
-import static org.hamcrest.Matchers.*;
-import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.BDDMockito.*;
-import static org.springframework.data.domain.Sort.Direction.*;
-import static org.springframework.data.domain.Sort.*;
-
-import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.UUID;
-
-import javax.sql.DataSource;
-
+import com.catpang.core.application.dto.CompanyDto;
+import com.catpang.core.application.dto.OrderDto.Result.Single;
+import com.catpang.core.application.dto.OrderProductDto;
+import com.catpang.core.application.dto.ProductDto;
+import com.catpang.core.application.response.ApiResponse;
+import com.catpang.core.exception.CustomException;
+import com.catpang.core.infrastructure.util.H2DbCleaner;
+import com.catpang.order.application.service.OrderService;
+import com.catpang.order.domain.model.Order;
+import com.catpang.order.domain.model.OrderProduct;
+import com.catpang.order.domain.repository.OrderProductRepository;
+import com.catpang.order.domain.repository.OrderRepository;
+import com.catpang.order.domain.repository.OrderSearchCondition;
+import com.catpang.order.infrastructure.feign.FeignCompanyInternalController;
+import com.catpang.order.infrastructure.feign.FeignProductInternalController;
+import jakarta.persistence.EntityNotFoundException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -34,23 +30,28 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 
-import com.catpang.core.application.dto.CompanyDto;
-import com.catpang.core.application.dto.OrderDto.Result.Single;
-import com.catpang.core.application.dto.OrderProductDto;
-import com.catpang.core.application.dto.ProductDto;
-import com.catpang.core.application.response.ApiResponse;
-import com.catpang.core.exception.CustomException;
-import com.catpang.core.infrastructure.util.H2DbCleaner;
-import com.catpang.core.presentation.controller.ProductInternalController;
-import com.catpang.order.application.service.OrderService;
-import com.catpang.order.domain.model.Order;
-import com.catpang.order.domain.model.OrderProduct;
-import com.catpang.order.domain.repository.OrderProductRepository;
-import com.catpang.order.domain.repository.OrderRepository;
-import com.catpang.order.domain.repository.OrderSearchCondition;
-import com.catpang.order.infrastructure.feign.FeignCompanyInternalController;
+import javax.sql.DataSource;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.UUID;
 
-import jakarta.persistence.EntityNotFoundException;
+import static com.catpang.core.application.dto.OrderDto.Create;
+import static com.catpang.core.application.dto.OrderDto.Result;
+import static com.catpang.core.codes.SuccessCode.SELECT_SUCCESS;
+import static com.catpang.core.infrastructure.util.ArbitraryField.*;
+import static com.catpang.order.helper.OrderHelper.anOrder;
+import static com.catpang.order.helper.OrderProductHelper.anOrderProduct;
+import static com.catpang.order.helper.OrderProductHelper.anOrderProductCreateDto;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.lessThanOrEqualTo;
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.BDDMockito.given;
+import static org.mockito.BDDMockito.mock;
+import static org.springframework.data.domain.Sort.Direction.ASC;
+import static org.springframework.data.domain.Sort.by;
 
 @SpringBootTest(classes = {OrderApplication.class}, properties = {"spring.cloud.config.enabled=false",
 	// Config 서버 비활성화
@@ -63,7 +64,7 @@ class OrderServiceTests {
 	private FeignCompanyInternalController companyController;
 
 	@MockBean
-	private ProductInternalController productController;
+    private FeignProductInternalController productController;
 
 	@Autowired
 	private DataSource dataSource;
