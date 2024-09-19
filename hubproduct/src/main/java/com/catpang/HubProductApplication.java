@@ -9,7 +9,7 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 @SpringBootApplication(scanBasePackages = {"com.catpang.hubproduct", "com.catpang.core"})
 @EntityScan(basePackages = {"com.catpang.hubproduct.domain.model", "com.catpang.core.domain.model"})
 @EnableJpaRepositories(basePackages = {"com.catpang.hubproduct.domain.repository", "com.catpang.core.domain.repository"})
-@EnableFeignClients(basePackages = {"com.catpang.hubproduct.infrastructure.feign", "com.catpang.core.infrastructure.feign"})
+@EnableFeignClients(basePackages = {"com.catpang.hubproduct.infrastructure.feign", "com.catpang.core.infrastructure"})
 public class HubProductApplication {
 
 	public static void main(String[] args) {
