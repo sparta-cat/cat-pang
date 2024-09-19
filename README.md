@@ -109,7 +109,7 @@
 Gateway에서 Auth서비스(User서비스)로 토큰 유효성 검사를 요청.<br>
 Auth서비스에서 유효한 토큰임이 확인되면, id와 role 값을 반환. <br>
 Gateway에서 반환받은 값을 Header에 넣고, 요청 엔드포인트로 라우팅. <br>
-<img src="https://private-user-images.githubusercontent.com/151634964/369188111-4df0cffb-a446-4b80-be4f-1211fd7c25aa.png?jwt=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJnaXRodWIuY29tIiwiYXVkIjoicmF3LmdpdGh1YnVzZXJjb250ZW50LmNvbSIsImtleSI6ImtleTUiLCJleHAiOjE3MjY3ODUwMjcsIm5iZiI6MTcyNjc4NDcyNywicGF0aCI6Ii8xNTE2MzQ5NjQvMzY5MTg4MTExLTRkZjBjZmZiLWE0NDYtNGI4MC1iZTRmLTEyMTFmZDdjMjVhYS5wbmc_WC1BbXotQWxnb3JpdGhtPUFXUzQtSE1BQy1TSEEyNTYmWC1BbXotQ3JlZGVudGlhbD1BS0lBVkNPRFlMU0E1M1BRSzRaQSUyRjIwMjQwOTE5JTJGdXMtZWFzdC0xJTJGczMlMkZhd3M0X3JlcXVlc3QmWC1BbXotRGF0ZT0yMDI0MDkxOVQyMjI1MjdaJlgtQW16LUV4cGlyZXM9MzAwJlgtQW16LVNpZ25hdHVyZT01ZjY1NDQ1YWQ3MzZkNjZlNDA2OGIzZWFjNWMxYTFjMWQxOTg0MjkzMDg3YmIyMTIzZTg3ZGNmZTZhMDg1NTljJlgtQW16LVNpZ25lZEhlYWRlcnM9aG9zdCJ9.1-C1NyFJg0sopS7LFF93GC595AjrZa_MUbvkJNUUumI">
+<img src="https://github.com/sparta-cat/cat-pang/blob/dev/infra.png?raw=true">
 
 ### 3.2 멀티 모듈 구조
 
@@ -133,7 +133,7 @@ Gateway에서 반환받은 값을 Header에 넣고, 요청 엔드포인트로 �
 
 ### 3.3 ERD
 
-<img src="https://private-user-images.githubusercontent.com/151634964/369188084-9cbbd0c2-1fb8-4a9b-b8b0-1acdc5df3103.png?jwt=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJnaXRodWIuY29tIiwiYXVkIjoicmF3LmdpdGh1YnVzZXJjb250ZW50LmNvbSIsImtleSI6ImtleTUiLCJleHAiOjE3MjY3ODUwMjcsIm5iZiI6MTcyNjc4NDcyNywicGF0aCI6Ii8xNTE2MzQ5NjQvMzY5MTg4MDg0LTljYmJkMGMyLTFmYjgtNGE5Yi1iOGIwLTFhY2RjNWRmMzEwMy5wbmc_WC1BbXotQWxnb3JpdGhtPUFXUzQtSE1BQy1TSEEyNTYmWC1BbXotQ3JlZGVudGlhbD1BS0lBVkNPRFlMU0E1M1BRSzRaQSUyRjIwMjQwOTE5JTJGdXMtZWFzdC0xJTJGczMlMkZhd3M0X3JlcXVlc3QmWC1BbXotRGF0ZT0yMDI0MDkxOVQyMjI1MjdaJlgtQW16LUV4cGlyZXM9MzAwJlgtQW16LVNpZ25hdHVyZT1hZDI2MTZmMWZmMzFhMzY2YjUxYjE4M2UwNTE5NjUyMjhhOWJhMjcwYjdlMDU2MmM0MzcwMjUwODBjNTdiODA3JlgtQW16LVNpZ25lZEhlYWRlcnM9aG9zdCJ9.a6vTqvYEOfogBjXCtxGgsZiP3h63PmgRYiERYtKBQYE">
+<img src="https://github.com/sparta-cat/cat-pang/blob/dev/erd.png?raw=true">
 
 ---
 
