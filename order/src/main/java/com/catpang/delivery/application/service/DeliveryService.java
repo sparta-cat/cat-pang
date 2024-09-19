@@ -52,7 +52,7 @@ public class DeliveryService {
 		UUID departureHubId = departureHub.id();
 		UUID destinationHubId = hubController.getHub(createDto.destinationHubId()).getResult().id();
 		UUID receiveCompanyId = companyController.getCompany(createDto.receiveCompanyId()).getResult().id();
-		UserDto.Result owner = userController.getUser(createDto.receiverId()).getResult();
+		UserDto.Result owner = userController.getUser(createDto.receiverId());
 		Long receiverId = owner.id();
 		UUID receiverSlackId = UUID.fromString(owner.slackId()); //TODO
 
