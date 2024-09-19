@@ -14,7 +14,7 @@ import com.catpang.core.presentation.controller.CompanyInternalController;
 public interface FeignCompanyInternalController extends CompanyInternalController {
 
 	@Override
-	@GetMapping("/api/v1/companies/{id}")
+	@GetMapping("/api/v1/internal/companies/{id}")
 	ApiResponse<CompanyDto.Result> getCompany(@PathVariable UUID id);
 }
 

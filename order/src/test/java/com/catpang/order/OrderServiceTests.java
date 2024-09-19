@@ -41,7 +41,6 @@ import com.catpang.core.application.dto.ProductDto;
 import com.catpang.core.application.response.ApiResponse;
 import com.catpang.core.exception.CustomException;
 import com.catpang.core.infrastructure.util.H2DbCleaner;
-import com.catpang.core.presentation.controller.ProductInternalController;
 import com.catpang.order.application.service.OrderService;
 import com.catpang.order.domain.model.Order;
 import com.catpang.order.domain.model.OrderProduct;
@@ -49,6 +48,7 @@ import com.catpang.order.domain.repository.OrderProductRepository;
 import com.catpang.order.domain.repository.OrderRepository;
 import com.catpang.order.domain.repository.OrderSearchCondition;
 import com.catpang.order.infrastructure.feign.FeignCompanyInternalController;
+import com.catpang.order.infrastructure.feign.FeignProductInternalController;
 
 import jakarta.persistence.EntityNotFoundException;
 
@@ -63,7 +63,7 @@ class OrderServiceTests {
 	private FeignCompanyInternalController companyController;
 
 	@MockBean
-	private ProductInternalController productController;
+	private FeignProductInternalController productController;
 
 	@Autowired
 	private DataSource dataSource;

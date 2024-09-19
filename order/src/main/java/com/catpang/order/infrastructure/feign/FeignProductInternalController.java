@@ -13,7 +13,7 @@ import com.catpang.core.presentation.controller.ProductInternalController;
 @FeignClient(name = "product-service")
 public interface FeignProductInternalController extends ProductInternalController {
 
-	@GetMapping("/api/v1/products/{id}")
+	@GetMapping("/api/v1/internal/products/{id}")
 	ApiResponse<ProductDto.Result> getProduct(@PathVariable UUID id);
 }
 

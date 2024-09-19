@@ -1,0 +1,26 @@
+server:
+  port: ${GATEWAY_PORT}
+
+spring:
+  application:
+    name: gateway
+  cloud:
+    gateway:
+      discovery:
+        locator:
+          enabled: true
+          lower-case-service-id: true
+
+eureka:
+  client:
+    service-url:
+      defaultZone: ${EUREKA_DOMAIN}:${EUREKA_PORT}/eureka/
+
+# swagger ??? ??? ???? ???? ????? ??
+springdoc:
+  use-fqn: true
+
+# ?? ??
+logging.level:
+  org.hibernate.SQL: debug
+  org.hibernate.type: trace
