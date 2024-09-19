@@ -72,20 +72,21 @@ public class Delivery extends Timestamped {
 	@NotNull
 	private UUID receiverSlackId;
 
-	@NotNull
-	private UUID presentAddressId;
+	private Integer presentSequence = 0;
+
+	private Integer destinationSequence;
 
 	@Builder
 	public Delivery(Order order, UUID departureHubId, UUID destinationHubId,
 		UUID receiveCompanyId,
-		Long receiverId, UUID receiverSlackId, UUID presentAddressId) {
+		Long receiverId, UUID receiverSlackId, Integer destinationSequence) {
 		this.order = order;
 		this.departureHubId = departureHubId;
 		this.destinationHubId = destinationHubId;
 		this.receiveCompanyId = receiveCompanyId;
 		this.receiverId = receiverId;
 		this.receiverSlackId = receiverSlackId;
-		this.presentAddressId = presentAddressId;
+		this.presentSequence = destinationSequence;
 	}
 }
 

@@ -31,7 +31,6 @@ public class DeliveryMapper extends EntityMapper {
 			.receiveCompanyId(delivery.getReceiveCompanyId())
 			.receiverId(delivery.getReceiverId())
 			.receiverSlackId(delivery.getReceiverSlackId())
-			.presentAddressId(delivery.getPresentAddressId())
 			.build();
 	}
 

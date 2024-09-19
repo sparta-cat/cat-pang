@@ -29,7 +29,8 @@ public interface DeliveryDto {
 
 	@With
 	@Builder
-	record Put(DeliveryStatus status, UUID nextAddressId) {
+	record Put(DeliveryStatus status, Integer nextSequenceNum) {
+
 	}
 
 	@With

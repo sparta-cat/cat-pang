@@ -57,7 +57,6 @@ public class DeliveryService {
 		UserDto.Result owner = userController.getUser(createDto.receiverId()).getResult();
 		Long receiverId = owner.id();
 		UUID receiverSlackId = UUID.fromString(owner.slackId()); //TODO
-		UUID presentAddressId = departureHub.addressId();
 
 		Delivery delivery = DeliveryMapper.entityFromWithOrder(createDto, order);
 		delivery.setDepartureHubId(departureHubId);
@@ -65,9 +64,12 @@ public class DeliveryService {
 		delivery.setReceiveCompanyId(receiveCompanyId);
 		delivery.setReceiverId(receiverId);
 		delivery.setReceiverSlackId(receiverSlackId);
-		delivery.setPresentAddressId(presentAddressId);
+		delivery.setDestinationSequence(1); //TODO dummy
 
-		return dtoFrom(deliveryRepository.save(delivery));
+		delivery = deliveryRepository.save(delivery);
+		deliveryLogService.getDeliveryRoute(delivery.getId(), departureHubId, destinationHubId);
+
+		return dtoFrom(delivery);
 	}
 
 	/**
@@ -157,8 +159,8 @@ public class DeliveryService {
 	@Transactional
 	public Result putDelivery(UUID id, Put putDto) {
 		Delivery delivery = repositoryHelper.findOrThrowNotFound(id);
-		addressController.getAddress(putDto.nextAddressId());
 		delivery.setStatus(putDto.status());
+		delivery.setPresentSequence(putDto.nextSequenceNum());
 
 		return dtoFrom(deliveryRepository.save(putToEntity(putDto, delivery)));
 	}
