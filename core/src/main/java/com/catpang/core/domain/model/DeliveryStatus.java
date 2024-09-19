@@ -5,23 +5,23 @@ package com.catpang.core.domain.model;
  */
 public enum DeliveryStatus {
 
-    /**
-     * 배송 대기 중
-     */
-    WAITING_FOR_TRANSPORT,
+	/**
+	 * 배송 대기 중
+	 */
+	WAITING_FOR_TRANSPORT,
 
-    /**
-     * 배송 중
-     */
-    IN_TRANSIT,
+	/**
+	 * 배송 중
+	 */
+	IN_TRANSIT,
 
-    /**
-     * 도착 완료
-     */
-    ARRIVED,
+	/**
+	 * 도착 완료
+	 */
+	ARRIVED,
 
-    /**
-     * 배송 준비 중
-     */
-    OUT_FOR_DELIVERY
+	/**
+	 * 배송 준비 중
+	 */
+	OUT_FOR_DELIVERY
 }

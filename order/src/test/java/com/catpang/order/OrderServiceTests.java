@@ -1,12 +1,50 @@
 package com.catpang.order;
 
+import static com.catpang.core.application.dto.OrderDto.*;
+import static com.catpang.core.codes.SuccessCode.*;
+import static com.catpang.core.infrastructure.util.ArbitraryField.*;
+import static com.catpang.order.helper.OrderHelper.*;
+import static com.catpang.order.helper.OrderProductHelper.*;
+import static org.hamcrest.MatcherAssert.*;
+import static org.hamcrest.Matchers.*;
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.BDDMockito.*;
+import static org.springframework.data.domain.Sort.Direction.*;
+import static org.springframework.data.domain.Sort.*;
+
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.UUID;
+
+import javax.sql.DataSource;
+
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Nested;
+import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.context.annotation.ComponentScan;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContext;
+import org.springframework.security.core.context.SecurityContextHolder;
+
+import com.catpang.OrderApplication;
 import com.catpang.core.application.dto.CompanyDto;
+import com.catpang.core.application.dto.DeliveryDto;
 import com.catpang.core.application.dto.OrderDto.Result.Single;
 import com.catpang.core.application.dto.OrderProductDto;
 import com.catpang.core.application.dto.ProductDto;
 import com.catpang.core.application.response.ApiResponse;
 import com.catpang.core.exception.CustomException;
 import com.catpang.core.infrastructure.util.H2DbCleaner;
+
+import com.catpang.delivery.application.service.DeliveryService;
 import com.catpang.order.application.service.OrderService;
 import com.catpang.order.domain.model.Order;
 import com.catpang.order.domain.model.OrderProduct;
@@ -15,6 +53,7 @@ import com.catpang.order.domain.repository.OrderRepository;
 import com.catpang.order.domain.repository.OrderSearchCondition;
 import com.catpang.order.infrastructure.feign.FeignCompanyInternalController;
 import com.catpang.order.infrastructure.feign.FeignProductInternalController;
+
 import jakarta.persistence.EntityNotFoundException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
@@ -64,7 +103,7 @@ class OrderServiceTests {
 	private FeignCompanyInternalController companyController;
 
 	@MockBean
-    private FeignProductInternalController productController;
+	private FeignProductInternalController productController;
 
 	@Autowired
 	private DataSource dataSource;
@@ -74,6 +113,9 @@ class OrderServiceTests {
 
 	@Autowired
 	private OrderService orderService;
+
+	@MockBean
+	private DeliveryService deliveryService;
 
 	@BeforeEach
 	void setUp() throws SQLException {
@@ -116,6 +158,8 @@ class OrderServiceTests {
 			.result(productResult)
 			.build();
 		given(productController.getProduct(any(UUID.class))).willReturn(productResponse);
+
+		given(deliveryService.createDelivery(any(DeliveryDto.Create.class))).willReturn(null);
 
 		H2DbCleaner.clean(dataSource);
 	}

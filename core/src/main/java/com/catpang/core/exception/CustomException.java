@@ -1,9 +1,7 @@
 package com.catpang.core.exception;
 
 import java.util.UUID;
-
 import com.catpang.core.codes.ErrorCode;
-
 import lombok.Getter;
 
 /**
@@ -50,14 +48,27 @@ public class CustomException extends RuntimeException {
 	public static class UnauthorizedRequesterException extends CustomException {
 
 		/**
-		 * 요청자와 사용자 ID가 일치하지 않을 때 발생하는 예외.
+		 * 요청자와 사용자 ID가 일치하지 않을 때 발생하는 예외 (Long 타입).
 		 *
-		 * @param requesterId 요청자의 ID
-		 * @param userId      실제 사용자 ID
+		 * @param requesterId 요청자의 ID (Long)
+		 * @param userId      실제 사용자 ID (Long)
 		 */
 		public UnauthorizedRequesterException(Long requesterId, Long userId) {
 			super(ErrorCode.UNAUTHORIZED,
 				String.format("Requester ID (%d) does not match User ID (%d)", requesterId, userId));
+		}
+
+		/**
+		 * 요청자와 사용자 ID가 일치하지 않을 때 발생하는 예외 (UUID 타입).
+		 *
+		 * <p>새로 추가된 생성자로, 요청자와 사용자의 ID가 UUID 타입일 때 호출됩니다.
+		 *
+		 * @param requesterId 요청자의 UUID
+		 * @param userId      실제 사용자 UUID
+		 */
+		public UnauthorizedRequesterException(UUID requesterId, UUID userId) {
+			super(ErrorCode.UNAUTHORIZED,
+				String.format("Requester UUID (%s) does not match User UUID (%s)", requesterId, userId));
 		}
 	}
 

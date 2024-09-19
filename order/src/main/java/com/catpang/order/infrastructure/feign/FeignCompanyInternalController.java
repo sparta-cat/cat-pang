@@ -13,7 +13,7 @@ import java.util.UUID;
 public interface FeignCompanyInternalController extends CompanyInternalController {
 
 	@Override
-    @GetMapping("/api/v1/internal/companies/{id}")
+	@GetMapping("/api/v1/internal/companies/{id}")
 	ApiResponse<CompanyDto.Result> getCompany(@PathVariable UUID id);
 }
 

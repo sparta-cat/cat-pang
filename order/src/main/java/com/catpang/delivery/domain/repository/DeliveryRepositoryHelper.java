@@ -1,11 +1,13 @@
 package com.catpang.delivery.domain.repository;
 
-import com.catpang.core.domain.repository.helper.AbstractRepositoryHelper;
-import com.catpang.delivery.domain.model.Delivery;
-import jakarta.persistence.EntityManager;
+import java.util.UUID;
+
 import org.springframework.stereotype.Component;
 
-import java.util.UUID;
+import com.catpang.core.domain.repository.helper.AbstractRepositoryHelper;
+import com.catpang.delivery.domain.model.Delivery;
+
+import jakarta.persistence.EntityManager;
 
 /**
  * Delivery 엔티티에 대한 RepositoryHelper 구현체.
@@ -13,7 +15,7 @@ import java.util.UUID;
 @Component
 public class DeliveryRepositoryHelper extends AbstractRepositoryHelper<Delivery, UUID> {
 
-    public DeliveryRepositoryHelper(EntityManager em) {
-        super(em);
-    }
+	public DeliveryRepositoryHelper(EntityManager em) {
+		super(em);
+	}
 }
