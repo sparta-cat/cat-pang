@@ -1,7 +1,7 @@
 package com.catpang.delivery.application.service;
 
-
 import static com.catpang.core.application.dto.DeliveryDto.*;
+import static com.catpang.core.domain.model.DeliveryStatus.*;
 import static com.catpang.delivery.application.service.DeliveryMapper.*;
 
 import java.util.UUID;
@@ -17,7 +17,6 @@ import com.catpang.delivery.domain.model.Delivery;
 import com.catpang.delivery.domain.repository.DeliveryRepository;
 import com.catpang.delivery.domain.repository.DeliveryRepositoryHelper;
 import com.catpang.delivery.domain.repository.DeliverySearchCondition;
-import com.catpang.delivery.infrastructure.feign.FeignAddressInternalController;
 import com.catpang.delivery.infrastructure.feign.FeignHubInternalController;
 import com.catpang.delivery.infrastructure.feign.FeignUserInternalController;
 import com.catpang.order.domain.model.Order;
@@ -37,9 +36,8 @@ public class DeliveryService {
 	private final FeignHubInternalController hubController;
 	private final FeignCompanyInternalController companyController;
 	private final FeignUserInternalController userController;
-	// private final FeignSlackInternalController slackController;
-	private final FeignAddressInternalController addressController;
 	private final OrderRepositoryHelper orderRepositoryHelper;
+	private final DeliveryLogService deliveryLogService;
 
 	/**
 	 * 새로운 배송을 생성하는 메서드
@@ -163,6 +161,40 @@ public class DeliveryService {
 		delivery.setPresentSequence(putDto.nextSequenceNum());
 
 		return dtoFrom(deliveryRepository.save(putToEntity(putDto, delivery)));
+	}
+
+	/**
+	 * 배송의 다음 시퀀스를 가져오는 메서드
+	 *
+	 * @param id 업데이트할 배송의 ID
+	 * @return 업데이트된 배송 결과
+	 */
+	@Transactional
+	public Result getNextSequence(UUID id) {
+		Delivery delivery = repositoryHelper.findOrThrowNotFound(id);
+		return dtoFrom(deliveryRepository.save(nextSequence(delivery)));
+	}
+
+	/**
+	 * 배송의 시퀀스를 증가시키고 상태를 업데이트하는 메서드
+	 *
+	 * @param delivery 업데이트할 배송 엔티티
+	 * @return 업데이트된 배송 엔티티
+	 */
+	private Delivery nextSequence(Delivery delivery) {
+		Integer pastSequence = delivery.getPresentSequence();
+		Integer nextSequence = pastSequence + 1;
+		if (delivery.getStatus().equals(OUT_FOR_DELIVERY)) {
+			delivery.setStatus(IN_TRANSIT);
+		}
+		deliveryLogService.setArrived(delivery.getId(), nextSequence);
+		delivery.setPresentSequence(nextSequence);
+
+		if (delivery.getDestinationSequence().equals(nextSequence)) {
+			delivery.setStatus(ARRIVED);
+		}
+
+		return delivery;
 	}
 
 	/**
