@@ -16,7 +16,6 @@ services:
       interval: 10s
       timeout: 5s
       retries: 5
-
   # Config 서버 정의
   config:
     build:
@@ -39,6 +38,30 @@ services:
       retries: 5
     restart: on-failure
 
+  # Gateway 서버 정의
+  gateway:
+    build:
+      context: ./gateway
+    env_file:
+      - ${GATEWAY_ENV}
+    ports:
+      - ${GATEWAY_PORT}:${GATEWAY_PORT}  # 애플리케이션 포트 매핑 설정 (수정 가능)
+    volumes:
+      - ./app_data:/path/in/container  # 애플리케이션 데이터 볼륨 설정 (필요한 경우 경로 수정 가능)
+    depends_on:
+      eureka:
+        condition: service_healthy
+      config:
+        condition: service_healthy
+    networks:
+      - my-microservices-network
+    healthcheck:
+      test: [ "CMD", "curl", "-f", "${EUREKA_OUT_DOMAIN}:${GATEWAY_PORT}/actuator/health" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    restart: on-failure
+
   # PostgresSQL 정의
   orderPostgres:
     image: postgres:13
@@ -47,11 +70,11 @@ services:
     ports:
       - ${ORDER_DB_OUTER_PORT}:${ORDER_DB_INNER_PORT}
     volumes:
-      - postgres_data:/var/lib/postgresql/data  # 데이터 영속성을 위한 볼륨 설정
+      - postgres_data:/var/lib/postgresql/order/data  # 데이터 영속성을 위한 볼륨 설정
     networks:
       - my-microservices-network
     healthcheck:
-      test: [ "CMD-SHELL", "pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}" ]
+      test: [ "CMD-SHELL", "pg_isready -U ${ORDER_POSTGRES_USER} -d ${ORDER_POSTGRES_DB}" ]
       interval: 5s
       timeout: 5s
       retries: 5
@@ -67,6 +90,8 @@ services:
     volumes:
       - ./app_data:/path/in/container  # 애플리케이션 데이터 볼륨 설정 (필요한 경우 경로 수정 가능)
     depends_on:
+      gateway:
+        condition: service_healthy
       config:
         condition: service_healthy
       orderPostgres:
@@ -80,6 +105,71 @@ services:
       retries: 5
     restart: on-failure
 
+  # PostgresSQL 정의
+  userPostgres:
+    image: postgres:13
+    env_file:
+      - ${USER_DB_ENV}
+    ports:
+      - ${USER_DB_OUTER_PORT}:${USER_DB_INNER_PORT}
+    volumes:
+      - postgres_data:/var/lib/postgresql/user/data  # 데이터 영속성을 위한 볼륨 설정
+    networks:
+      - my-microservices-network
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U ${USER_POSTGRES_USER} -d ${USER_POSTGRES_DB}" ]
+      interval: 5s
+      timeout: 5s
+      retries: 15
+
+  # User 서버 정의
+  user:
+    build:
+      context: ./user
+    env_file:
+      - docker_env_files/user_docker.env
+    ports:
+      - ${USER_PORT}:${USER_PORT}  # 애플리케이션 포트 매핑 설정 (수정 가능)
+    volumes:
+      - ./app_data:/path/in/container  # 애플리케이션 데이터 볼륨 설정 (필요한 경우 경로 수정 가능)
+    depends_on:
+      gateway:
+        condition: service_healthy
+      config:
+        condition: service_healthy
+      userPostgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    networks:
+      - my-microservices-network
+    healthcheck:
+      test: [ "CMD", "curl", "-f", "${EUREKA_OUT_DOMAIN}:${USER_PORT}/actuator/health" ]
+      interval: 10s
+      timeout: 5s
+      retries: 15
+    restart: on-failure
+
+  redis: # container name
+    image: redis:latest
+    env_file:
+      - ${USER_REDIS_ENV}
+    ports: # 바인딩할 포트:내부 포트
+      - ${USER_REDIS_OUTER_PORT}:${USER_REDIS_INNER_PORT}
+    command: redis-server /usr/local/etc/redis/redis.conf
+    volumes: # 마운트할 볼륨 설정
+      - redis_data:/var/lib/redis/user/data
+      - ./redis.conf:/usr/local/etc/redis/redis.conf # 파일 경로 수정
+    networks:
+      - my-microservices-network
+    healthcheck:
+      test: [ "CMD", "redis-cli", "ping" ]  # redis-cli ping 명령어로 상태 확인
+      interval: 30s  # 헬스 체크 간격
+      timeout: 10s   # 응답 대기 시간
+      retries: 5     # 실패 후 재시도 횟수
+      start_period: 10s  # 컨테이너 시작 후 첫 헬스 체크까지 대기 시간
+    restart: always
+
 
 networks:
   my-microservices-network:
@@ -87,3 +177,4 @@ networks:
 
 volumes:
   postgres_data:
+  redis_data:
