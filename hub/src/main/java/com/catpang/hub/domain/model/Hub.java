@@ -5,11 +5,14 @@ import java.util.UUID;
 import org.hibernate.annotations.GenericGenerator;
 
 import com.catpang.core.domain.model.auditing.Timestamped;
+import com.catpang.address.domain.model.Address;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -44,19 +47,20 @@ public class Hub extends Timestamped {
 	/**
 	 * 허브의 이름입니다.
 	 */
-	@Setter
-	@Column(length = 100)
+	@Column(length = 100, nullable = false)
 	private String name;
 
 	/**
 	 * 허브의 주소입니다.
+	 * Address 모듈의 Address 엔티티를 참조합니다.
 	 */
-	@Setter
-	@Column(length = 200)
-	private String address;
+	@ManyToOne
+	@JoinColumn(name = "address_id", nullable = false)
+	private Address address;
 
 	/**
 	 * 허브를 생성한 사용자의 ID입니다.
 	 */
+	@Column(name = "owner_id", nullable = false)
 	private Long ownerId;
 }

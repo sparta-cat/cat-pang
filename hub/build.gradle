@@ -9,7 +9,7 @@ plugins {
 dependencies {
     // core 모듈 의존성 추가
     implementation project(":core")
-
+    implementation project(':address')  // address 모듈 추가
     // 추가 의존성 (필요에 따라)
     implementation 'org.springframework.cloud:spring-cloud-starter-openfeign'
     implementation 'org.springframework.cloud:spring-cloud-starter-netflix-eureka-client'
