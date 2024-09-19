@@ -1,0 +1,17 @@
+plugins {
+    id 'catpang.java-conventions'
+    id 'catpang.spring-conventions'
+    id 'catpang.spring-cloud-conventions'
+    id 'catpang.query-dsl-conventions'
+    id 'org.springframework.boot'
+}
+
+dependencies {
+    implementation project(":core")
+    implementation project(":hub")
+    implementation 'org.springframework.cloud:spring-cloud-starter-openfeign'
+    implementation 'org.springframework.cloud:spring-cloud-starter-netflix-eureka-client'
+    implementation 'org.springframework.cloud:spring-cloud-starter-config'
+    implementation 'org.springframework.boot:spring-boot-starter-actuator'
+    testImplementation 'org.springframework.security:spring-security-test'
+}
