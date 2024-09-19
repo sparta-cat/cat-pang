@@ -15,6 +15,5 @@ public interface FeignHubInternalController extends HubInternalController {
 
 	@GetMapping("/api/v1/internal/hubs/{id}")
 	ApiResponse<HubDto.Result> getHub(@PathVariable UUID id);
-
 }
 
