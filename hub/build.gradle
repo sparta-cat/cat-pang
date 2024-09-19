@@ -1,0 +1,20 @@
+plugins {
+    id 'catpang.java-conventions'
+    id 'catpang.spring-conventions'
+    id 'catpang.spring-cloud-conventions'
+    id 'catpang.query-dsl-conventions'
+    id 'org.springframework.boot'
+}
+
+dependencies {
+    // core 모듈 의존성 추가
+    implementation project(":core")
+    implementation project(':address')  // address 모듈 추가
+    // 추가 의존성 (필요에 따라)
+    implementation 'org.springframework.cloud:spring-cloud-starter-openfeign'
+    implementation 'org.springframework.cloud:spring-cloud-starter-netflix-eureka-client'
+    implementation 'org.springframework.cloud:spring-cloud-starter-config'
+    implementation 'org.springframework.boot:spring-boot-starter-actuator'
+
+    testImplementation 'org.springframework.security:spring-security-test'
+}
