@@ -10,7 +10,7 @@ public interface CompanyDto {
 	@With
 	@Builder
 	record Result(
-		UUID id, Long ownerId, String companyName, String companyAddress, String companyPhone
+		UUID id, Long ownerId, String companyName, String companyAddress, String companyPhone, UUID hubId
 	) {
 	}
 }
