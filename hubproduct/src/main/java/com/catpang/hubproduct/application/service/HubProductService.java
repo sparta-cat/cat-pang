@@ -49,6 +49,26 @@ public class HubProductService {
 	}
 
 	/**
+	 * 허브 상품을 업데이트합니다.
+	 */
+	@Transactional
+	public HubProductDto.Result updateHubProduct(UUID hubProductId, HubProductDto.Update updateDto) {
+		// 허브 및 상품 존재 여부 검증
+		hubClient.getHub(updateDto.hubId());
+		productClient.getProduct(updateDto.productId());
+
+		// HubProduct 조회 후 업데이트
+		HubProduct hubProduct = hubProductRepository.findById(hubProductId)
+			.orElseThrow(() -> new IllegalArgumentException("HubProduct not found"));
+
+		hubProduct.setHubId(updateDto.hubId());  // 허브 ID 업데이트
+		hubProduct.setProductId(updateDto.productId());  // 상품 ID 업데이트
+		hubProduct.setAmount(updateDto.amount());  // 수량 업데이트
+
+		return toDto(hubProduct);
+	}
+
+	/**
 	 * HubProduct 엔티티를 HubProductDto로 변환합니다.
 	 */
 	private HubProductDto.Result toDto(HubProduct hubProduct) {
