@@ -63,7 +63,7 @@
 
 ## 4️⃣ 적용 기술
 
-### **Multie Modules**
+### 🎎**Multie Modules**
 
 본 프로젝트는 MSA와 모놀리식 구조의 장점을 결합한 멀티 모듈 구조를 채택하였습니다.
 </br>
@@ -71,27 +71,27 @@
 </br>
 이를 통해 모듈별로 명확한 책임을 부여하고, 기능 확장 및 변경 사항이 발생하더라도 안정적인 운영이 가능하도록 설계되었습니다.
 
-### **QueryDSL**
+### 🔍**QueryDSL**
 
 - 페이징, 정렬, 검색어 등에 따른 동적 쿼리 작성을 위하여 QueryDSL을 도입하여 활용했습니다.
 - 컴파일 시점에 오류를 발견할 수 있어, 런타임 에러를 줄일 수 있었습니다.
 - Query DSL을 통해 객체 지향 프로그램의 장점을 활용해 타입 안전성을 보장할 수 있었습니다.
 
-### **Swagger**
+### 📜**Swagger**
 
 - **문서화:** SwaggerUI를 사용하여 각각의 API 문서를 자동으로 생성할 수 있었습니다.
 - **시각화:** API엔드포인트, 매개변수, 요청 및 응답 본문 등을 시각적으로 확인할 수 있었습니다.
 - **테스트:** 각각의 API를 테스트할 수 있었습니다.
 - **팀 간의 협업 용이:** API문서를 중앙 집중식으로 관리하여 팀원 간의 협업을 용이하게 진행할 수 있었습니다.
 
-### **JWT (JSON Web Token)**
+### 🔐**JWT (JSON Web Token)**
 
 - **무상태 인증:** JWT를 사용하여 세션 상태를 유지하지 않고도 사용자 인증을 처리할 수 있었습니다.
 - **Self-contained 토큰:** 토큰 자체에 사용자 정보 및 권한 정보가 포함되어 있어, 서버가 별도로 상태를 저장하지 않고도 인증을 수행할 수 있었습니다.
 - **보안성:** JWT는 서명을 통해 토큰의 무결성을 보장하며, 만료 시간을 설정하여 토큰의 유효성을 관리할 수 있었습니다.
 - **확장성:** 분산 시스템 환경에서 JWT를 사용함으로써, 서버 간 세션 공유 없이 확장 가능한 인증 구조를 구현할 수 있었습니다.
 
-### **Redis**
+### 🟥**Redis**
 
 - **토큰 관리**: **Refresh Token**을 Redis에 저장하고 관리함으로써, JWT가 만료되었을 때 효율적으로 토큰을 갱신할 수 있었습니다.
 - **캐싱을 통한 빠른 데이터 조회**: 자주 조회되는 데이터(예: 사용자 정보 등)를 Redis에 캐싱하여, 데이터베이스 접근을 줄이고 빠른 응답 시간을 제공하였습니다. 이를 통해 성능을 크게 향상시켰습니다.
@@ -102,6 +102,14 @@
 ## 5️⃣ 프로젝트 구성
 
 ### 3.1 인프라 아키텍처
+
+***➡️사용자 API 요청 흐름***
+<br>
+로그인 후 사용자가 API요청을 보내면, <br>
+Gateway에서 Auth서비스(User서비스)로 토큰 유효성 검사를 요청.<br>
+Auth서비스에서 유효한 토큰임이 확인되면, id와 role 값을 반환. <br>
+Gateway에서 반환받은 값을 Header에 넣고, 요청 엔드포인트로 라우팅. <br>
+<img src="https://private-user-images.githubusercontent.com/151634964/369188111-4df0cffb-a446-4b80-be4f-1211fd7c25aa.png?jwt=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJnaXRodWIuY29tIiwiYXVkIjoicmF3LmdpdGh1YnVzZXJjb250ZW50LmNvbSIsImtleSI6ImtleTUiLCJleHAiOjE3MjY3ODUwMjcsIm5iZiI6MTcyNjc4NDcyNywicGF0aCI6Ii8xNTE2MzQ5NjQvMzY5MTg4MTExLTRkZjBjZmZiLWE0NDYtNGI4MC1iZTRmLTEyMTFmZDdjMjVhYS5wbmc_WC1BbXotQWxnb3JpdGhtPUFXUzQtSE1BQy1TSEEyNTYmWC1BbXotQ3JlZGVudGlhbD1BS0lBVkNPRFlMU0E1M1BRSzRaQSUyRjIwMjQwOTE5JTJGdXMtZWFzdC0xJTJGczMlMkZhd3M0X3JlcXVlc3QmWC1BbXotRGF0ZT0yMDI0MDkxOVQyMjI1MjdaJlgtQW16LUV4cGlyZXM9MzAwJlgtQW16LVNpZ25hdHVyZT01ZjY1NDQ1YWQ3MzZkNjZlNDA2OGIzZWFjNWMxYTFjMWQxOTg0MjkzMDg3YmIyMTIzZTg3ZGNmZTZhMDg1NTljJlgtQW16LVNpZ25lZEhlYWRlcnM9aG9zdCJ9.1-C1NyFJg0sopS7LFF93GC595AjrZa_MUbvkJNUUumI">
 
 ### 3.2 멀티 모듈 구조
 
@@ -122,6 +130,10 @@
   ├─── product/
 
 ```
+
+### 3.3 ERD
+
+<img src="https://private-user-images.githubusercontent.com/151634964/369188084-9cbbd0c2-1fb8-4a9b-b8b0-1acdc5df3103.png?jwt=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJnaXRodWIuY29tIiwiYXVkIjoicmF3LmdpdGh1YnVzZXJjb250ZW50LmNvbSIsImtleSI6ImtleTUiLCJleHAiOjE3MjY3ODUwMjcsIm5iZiI6MTcyNjc4NDcyNywicGF0aCI6Ii8xNTE2MzQ5NjQvMzY5MTg4MDg0LTljYmJkMGMyLTFmYjgtNGE5Yi1iOGIwLTFhY2RjNWRmMzEwMy5wbmc_WC1BbXotQWxnb3JpdGhtPUFXUzQtSE1BQy1TSEEyNTYmWC1BbXotQ3JlZGVudGlhbD1BS0lBVkNPRFlMU0E1M1BRSzRaQSUyRjIwMjQwOTE5JTJGdXMtZWFzdC0xJTJGczMlMkZhd3M0X3JlcXVlc3QmWC1BbXotRGF0ZT0yMDI0MDkxOVQyMjI1MjdaJlgtQW16LUV4cGlyZXM9MzAwJlgtQW16LVNpZ25hdHVyZT1hZDI2MTZmMWZmMzFhMzY2YjUxYjE4M2UwNTE5NjUyMjhhOWJhMjcwYjdlMDU2MmM0MzcwMjUwODBjNTdiODA3JlgtQW16LVNpZ25lZEhlYWRlcnM9aG9zdCJ9.a6vTqvYEOfogBjXCtxGgsZiP3h63PmgRYiERYtKBQYE">
 
 ---
 
