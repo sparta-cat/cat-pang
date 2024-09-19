@@ -6,7 +6,7 @@ spring:
     config:
       enabled: false  # Config 서버 사용 안함
   application:
-    name: user
+    name: hub-service
   datasource:
     url: ${DB_DATABASE}
     username: ${DB_USERNAME}
