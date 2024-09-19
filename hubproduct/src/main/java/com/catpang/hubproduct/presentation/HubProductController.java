@@ -25,4 +25,10 @@ public class HubProductController {
 	public HubProductDto.Result getHubProduct(@PathVariable UUID hubProductId) {
 		return hubProductService.getHubProduct(hubProductId);
 	}
+
+	@PutMapping("/{hubProductId}")
+	public HubProductDto.Result updateHubProduct(@PathVariable UUID hubProductId,
+		@Valid @RequestBody HubProductDto.Update updateDto) {
+		return hubProductService.updateHubProduct(hubProductId, updateDto);
+	}
 }

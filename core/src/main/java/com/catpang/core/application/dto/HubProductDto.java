@@ -17,6 +17,14 @@ public interface HubProductDto {
 
 	@With
 	@Builder
+	record Update(
+		@NotNull UUID hubId,
+		@NotNull UUID productId,
+		int amount
+	) {}
+
+	@With
+	@Builder
 	record Result(
 		UUID id,
 		UUID hubId,
