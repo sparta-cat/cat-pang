@@ -16,4 +16,6 @@ public interface DeliveryLogRepository extends BaseRepository<DeliveryLog, UUID,
 	Page<DeliveryLog> findAllByDeliveryOrderOwnerId(Pageable pageable, Long ownerId);
 
 	DeliveryLog findByIdAndDeliveryOrderOwnerId(UUID id, Long ownerId);
+
+	DeliveryLog findByDeliveryIdAndSequence(UUID deliveryId, Integer sequence);
 }

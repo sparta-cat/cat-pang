@@ -1,6 +1,7 @@
 package com.catpang.delivery.application.service;
 
 import static com.catpang.core.application.dto.DeliveryLogDto.*;
+import static com.catpang.core.domain.model.DeliveryStatus.*;
 import static com.catpang.delivery.application.service.DeliveryLogMapper.*;
 
 import java.util.UUID;
@@ -10,6 +11,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.catpang.core.application.dto.DeliveryLogDto;
 import com.catpang.delivery.domain.model.Delivery;
 import com.catpang.delivery.domain.model.DeliveryLog;
 import com.catpang.delivery.domain.repository.DeliveryLogRepository;
@@ -96,5 +98,25 @@ public class DeliveryLogService {
 		DeliveryLog deliveryLog = deliveryLogRepositoryHelper.findOrThrowNotFound(id);
 		deliveryLog.softDelete();
 		return dtoWithDeleter(deliveryLog, deleterId);
+	}
+
+	@Transactional
+	public void setArrived(UUID deliveryId, Integer nextSequence) {
+		DeliveryLog deliveryLog = deliveryLogRepository.findByDeliveryIdAndSequence(deliveryId,
+			nextSequence);
+		deliveryLog.setStatus(ARRIVED);
+		deliveryLogRepository.save(deliveryLog);
+	}
+
+	public void getDeliveryRoute(UUID deliveryId, UUID departureHubId, UUID destinationHubId) { //TODO dummy
+		DeliveryLogDto.Create logDto = DeliveryLogDto.Create.builder()
+			.deliveryId(deliveryId)
+			.sequence(1)
+			.status(WAITING_FOR_TRANSPORT)
+			.departureHubId(departureHubId)
+			.destinationHubId(destinationHubId)
+			.build();
+
+		createDeliveryLog(logDto);
 	}
 }
