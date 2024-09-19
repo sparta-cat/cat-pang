@@ -3,6 +3,8 @@ package com.catpang.core.application.service;
 import static com.catpang.core.application.service.EntityMapper.*;
 import static com.catpang.core.exception.CustomException.*;
 
+import java.util.UUID;
+
 import org.springframework.security.core.userdetails.UserDetails;
 
 import com.catpang.core.infrastructure.UserRoleChecker;
@@ -40,4 +42,11 @@ public abstract class AbstractAuthorizer {
 			throw new UnauthorizedRequesterException(requesterId, userId);
 		}
 	}
+	public void requireSelf(UserDetails userDetails, UUID requesterId) {
+		UUID userId = UUID.fromString(userDetails.getUsername());
+		if ((!requesterId.equals(userId))) {
+			throw new UnauthorizedRequesterException(requesterId, userId);
+		}
+	}
+
 }
