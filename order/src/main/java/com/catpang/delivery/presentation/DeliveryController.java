@@ -110,4 +110,21 @@ public class DeliveryController {
 		//TODO: deliveryAuth
 		return deliveryService.softDeleteDelivery(deliveryId);
 	}
+
+	/**
+	 * 배송의 다음 시퀀스를 업데이트하는 엔드포인트입니다.
+	 * 마스터 관리자, 허브 관리자, 또는 배송 담당자만 접근 가능
+	 *
+	 * @param deliveryId 업데이트할 배송의 UUID
+	 * @param userDetails 인증된 사용자 정보
+	 * @return 업데이트된 배송 정보를 반환합니다.
+	 */
+	@PreAuthorize("hasRole('" + HUB_ADMIN + "') or hasRole('" + MASTER_ADMIN + "') or hasRole('" + DELIVERY + "')")
+	@PutMapping("/{deliveryId}/next-sequence")
+	public Result updateNextSequence(@PathVariable UUID deliveryId,
+		@AuthenticationPrincipal UserDetails userDetails) {
+
+		//TODO: deliveryAuth 체크
+		return deliveryService.getNextSequence(deliveryId);
+	}
 }
