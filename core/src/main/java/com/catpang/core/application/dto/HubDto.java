@@ -1,12 +1,9 @@
 package com.catpang.core.application.dto;
 
-import lombok.Builder;
-
-import lombok.Getter;
-import lombok.Setter;
-import lombok.With;
-
 import java.util.UUID;
+
+import lombok.Builder;
+import lombok.With;
 
 public interface HubDto {
 
@@ -19,7 +16,8 @@ public interface HubDto {
 		String zipcode,
 		String latitude,
 		String longitude
-	) {}
+	) {
+	}
 
 	@With
 	@Builder
@@ -31,7 +29,8 @@ public interface HubDto {
 		String zipcode,
 		String latitude,
 		String longitude
-	) {}
+	) {
+	}
 
 	@With
 	@Builder
@@ -42,6 +41,8 @@ public interface HubDto {
 		String street,
 		String zipcode,
 		String latitude,
-		String longitude
-	) {}
+		String longitude,
+		UUID addressId
+	) {
+	}
 }

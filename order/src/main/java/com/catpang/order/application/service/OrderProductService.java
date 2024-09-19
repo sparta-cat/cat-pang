@@ -46,13 +46,13 @@ public class OrderProductService {
 	@Transactional
 	public Result createOrderProduct(Create createDto, UUID orderId, UUID produceCompanyId) {
 		ProductDto.Result result = productController.getProduct(createDto.productId()).getResult();
-		if (!result.companyId().equals(produceCompanyId)) {
-			throw new CustomException.ProductCompanyMismatchException(produceCompanyId, result.companyId());
+		if (!result.getCompanyId().equals(produceCompanyId)) {
+			throw new CustomException.ProductCompanyMismatchException(produceCompanyId, result.getCompanyId());
 		}
 		Order order = orderRepositoryHelper.findOrThrowNotFound(orderId);
 		OrderProduct orderProduct = entityFrom(createDto);
 		orderProduct.setOrder(order);
-		orderProduct.setProductId(result.id());
+		orderProduct.setProductId(result.getId());
 
 		return dtoFrom(orderProductRepository.save(orderProduct));
 	}
