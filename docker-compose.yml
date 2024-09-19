@@ -170,6 +170,230 @@ services:
       start_period: 10s  # 컨테이너 시작 후 첫 헬스 체크까지 대기 시간
     restart: always
 
+  # PostgresSQL 정의
+  hubPostgres:
+    image: postgres:13
+    env_file:
+      - ${HUB_DB_ENV}
+    ports:
+      - ${HUB_DB_OUTER_PORT}:${HUB_DB_INNER_PORT}
+    volumes:
+      - postgres_data:/var/lib/postgresql/hub/data  # 데이터 영속성을 위한 볼륨 설정
+    networks:
+      - my-microservices-network
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U ${HUB_POSTGRES_HUB} -d ${HUB_POSTGRES_DB}" ]
+      interval: 5s
+      timeout: 5s
+      retries: 15
+
+  # Hub 서버 정의
+  hub:
+    build:
+      context: ./hub
+    env_file:
+      - docker_env_files/hub_docker.env
+    ports:
+      - ${HUB_PORT}:${HUB_PORT}  # 애플리케이션 포트 매핑 설정 (수정 가능)
+    volumes:
+      - ./app_data:/path/in/container  # 애플리케이션 데이터 볼륨 설정 (필요한 경우 경로 수정 가능)
+    depends_on:
+      gateway:
+        condition: service_healthy
+      config:
+        condition: service_healthy
+      hubPostgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    networks:
+      - my-microservices-network
+    healthcheck:
+      test: [ "CMD", "curl", "-f", "${EUREKA_OUT_DOMAIN}:${HUB_PORT}/actuator/health" ]
+      interval: 10s
+      timeout: 5s
+      retries: 15
+    restart: on-failure
+  
+  # PostgresSQL 정의
+  userPostgres:
+    image: postgres:13
+    env_file:
+      - ${USER_DB_ENV}
+    ports:
+      - ${USER_DB_OUTER_PORT}:${USER_DB_INNER_PORT}
+    volumes:
+      - postgres_data:/var/lib/postgresql/user/data  # 데이터 영속성을 위한 볼륨 설정
+    networks:
+      - my-microservices-network
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U ${USER_POSTGRES_USER} -d ${USER_POSTGRES_DB}" ]
+      interval: 5s
+      timeout: 5s
+      retries: 15
+
+  # Hub_Product 서버 정의
+  hub_product:
+    build:
+      context: ./hub_product
+    env_file:
+      - docker_env_files/hub_product_docker.env
+    ports:
+      - ${HUB_PRODUCT_PORT}:${HUB_PRODUCT_PORT}  # 애플리케이션 포트 매핑 설정 (수정 가능)
+    volumes:
+      - ./app_data:/path/in/container  # 애플리케이션 데이터 볼륨 설정 (필요한 경우 경로 수정 가능)
+    depends_on:
+      gateway:
+        condition: service_healthy
+      config:
+        condition: service_healthy
+      hub_productPostgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    networks:
+      - my-microservices-network
+    healthcheck:
+      test: [ "CMD", "curl", "-f", "${EUREKA_OUT_DOMAIN}:${HUB_PRODUCT_PORT}/actuator/health" ]
+      interval: 10s
+      timeout: 5s
+      retries: 15
+    restart: on-failure
+
+  # PostgresSQL 정의
+  userPostgres:
+    image: postgres:13
+    env_file:
+      - ${USER_DB_ENV}
+    ports:
+      - ${USER_DB_OUTER_PORT}:${USER_DB_INNER_PORT}
+    volumes:
+      - postgres_data:/var/lib/postgresql/user/data  # 데이터 영속성을 위한 볼륨 설정
+    networks:
+      - my-microservices-network
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U ${USER_POSTGRES_USER} -d ${USER_POSTGRES_DB}" ]
+      interval: 5s
+      timeout: 5s
+      retries: 15
+
+  # Address 서버 정의
+  address:
+    build:
+      context: ./address
+    env_file:
+      - docker_env_files/address_docker.env
+    ports:
+      - ${ADDRESS_PORT}:${ADDRESS_PORT}  # 애플리케이션 포트 매핑 설정 (수정 가능)
+    volumes:
+      - ./app_data:/path/in/container  # 애플리케이션 데이터 볼륨 설정 (필요한 경우 경로 수정 가능)
+    depends_on:
+      gateway:
+        condition: service_healthy
+      config:
+        condition: service_healthy
+      addressPostgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    networks:
+      - my-microservices-network
+    healthcheck:
+      test: [ "CMD", "curl", "-f", "${EUREKA_OUT_DOMAIN}:${ADDRESS_PORT}/actuator/health" ]
+      interval: 10s
+      timeout: 5s
+      retries: 15
+    restart: on-failure
+  
+  # PostgresSQL 정의
+  userPostgres:
+    image: postgres:13
+    env_file:
+      - ${USER_DB_ENV}
+    ports:
+      - ${USER_DB_OUTER_PORT}:${USER_DB_INNER_PORT}
+    volumes:
+      - postgres_data:/var/lib/postgresql/user/data  # 데이터 영속성을 위한 볼륨 설정
+    networks:
+      - my-microservices-network
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U ${USER_POSTGRES_USER} -d ${USER_POSTGRES_DB}" ]
+      interval: 5s
+      timeout: 5s
+      retries: 15
+
+  # Company 서버 정의
+  company:
+    build:
+      context: ./company
+    env_file:
+      - docker_env_files/company_docker.env
+    ports:
+      - ${COMPANY_PORT}:${COMPANY_PORT}  # 애플리케이션 포트 매핑 설정 (수정 가능)
+    volumes:
+      - ./app_data:/path/in/container  # 애플리케이션 데이터 볼륨 설정 (필요한 경우 경로 수정 가능)
+    depends_on:
+      gateway:
+        condition: service_healthy
+      config:
+        condition: service_healthy
+      companyPostgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    networks:
+      - my-microservices-network
+    healthcheck:
+      test: [ "CMD", "curl", "-f", "${EUREKA_OUT_DOMAIN}:${COMPANY_PORT}/actuator/health" ]
+      interval: 10s
+      timeout: 5s
+      retries: 15
+    restart: on-failure
+  
+  # PostgresSQL 정의
+  productPostgres:
+    image: postgres:13
+    env_file:
+      - ${PRODUCT_DB_ENV}
+    ports:
+      - ${PRODUCT_DB_OUTER_PORT}:${PRODUCT_DB_INNER_PORT}
+    volumes:
+      - postgres_data:/var/lib/postgresql/product/data  # 데이터 영속성을 위한 볼륨 설정
+    networks:
+      - my-microservices-network
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U ${PRODUCT_POSTGRES_PRODUCT} -d ${PRODUCT_POSTGRES_DB}" ]
+      interval: 5s
+      timeout: 5s
+      retries: 15
+
+  # Product 서버 정의
+  product:
+    build:
+      context: ./product
+    env_file:
+      - docker_env_files/product_docker.env
+    ports:
+      - ${PRODUCT_PORT}:${PRODUCT_PORT}  # 애플리케이션 포트 매핑 설정 (수정 가능)
+    volumes:
+      - ./app_data:/path/in/container  # 애플리케이션 데이터 볼륨 설정 (필요한 경우 경로 수정 가능)
+    depends_on:
+      gateway:
+        condition: service_healthy
+      config:
+        condition: service_healthy
+      productPostgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    networks:
+      - my-microservices-network
+    healthcheck:
+      test: [ "CMD", "curl", "-f", "${EUREKA_OUT_DOMAIN}:${PRODUCT_PORT}/actuator/health" ]
+      interval: 10s
+      timeout: 5s
+      retries: 15
+    restart: on-failure
 
 networks:
   my-microservices-network:
