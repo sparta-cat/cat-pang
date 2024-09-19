@@ -2,23 +2,23 @@ package com.catpang.hub.application.service;
 
 import static com.catpang.core.application.service.EntityMapper.*;
 
-
-import java.util.List;
 import java.util.UUID;
+
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import com.catpang.core.application.service.EntityMapper;
+
+import com.catpang.address.domain.model.Address;
+import com.catpang.address.domain.repository.AddressRepository;
+import com.catpang.core.application.dto.AddressDto;
 import com.catpang.hub.application.dto.HubDto;
 import com.catpang.hub.domain.model.Hub;
 import com.catpang.hub.domain.repository.HubRepository;
 import com.catpang.hub.domain.repository.HubRepositoryHelper;
 import com.catpang.hub.domain.repository.HubSearchCondition;
-import com.catpang.address.domain.model.Address;
-import com.catpang.address.domain.repository.AddressRepository;
-import com.catpang.core.application.dto.AddressDto;
+
 import lombok.RequiredArgsConstructor;
 
 @Service
@@ -37,7 +37,7 @@ public class HubService {
 		Address address = Address.builder()
 			.city(createDto.address().city())
 			.street(createDto.address().street())
-			.zipcode(createDto.address().zipcode())
+			.zipCode(createDto.address().zipcode())
 			.latitude(createDto.address().latitude())
 			.longitude(createDto.address().longitude())
 			.build();
@@ -59,6 +59,7 @@ public class HubService {
 			.ownerId(hub.getOwnerId())
 			.build();
 	}
+
 	@Transactional
 	public HubDto.Result updateHub(UUID hubId, HubDto.Put putDto) {
 		Hub hub = hubRepositoryHelper.findOrThrowNotFound(hubId);
@@ -109,7 +110,7 @@ public class HubService {
 			.id(address.getId())
 			.city(address.getCity())
 			.street(address.getStreet())
-			.zipcode(address.getZipcode())
+			.zipcode(address.getZipCode())
 			.latitude(address.getLatitude())
 			.longitude(address.getLongitude())
 			.build();
