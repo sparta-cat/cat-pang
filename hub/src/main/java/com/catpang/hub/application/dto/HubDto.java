@@ -29,6 +29,6 @@ public interface HubDto {
 		UUID id,
 		String name,
 		AddressDto.Result address,  // Address object returned
-		UUID ownerId
+		Long ownerId
 	) {}
 }

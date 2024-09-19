@@ -24,7 +24,7 @@ public class HubAuthService extends AbstractAuthorizer {
 		if (userRoleChecker.isMasterAdmin(userDetails)) {
 			return;
 		}
-		UUID ownerId = hubRepositoryHelper.findOrThrowNotFound(hubId).getOwnerId();
-		requireSelf(userDetails, ownerId);  // ownerId를 그대로 전달
+		Long ownerId = hubRepositoryHelper.findOrThrowNotFound(hubId).getOwnerId();
+		requireSelf(userDetails, ownerId);
 	}
 }

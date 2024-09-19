@@ -38,7 +38,7 @@ public class HubRepositoryImpl implements BaseCustomSearch<Hub, HubSearchConditi
 		return ids.isEmpty() ? null : QHub.hub.id.in(ids);
 	}
 
-	private BooleanExpression inOwnerIds(List<UUID> ownerIds) {
+	private BooleanExpression inOwnerIds(List<Long> ownerIds) {
 		return ownerIds.isEmpty() ? null : QHub.hub.ownerId.in(ownerIds);
 	}
 }

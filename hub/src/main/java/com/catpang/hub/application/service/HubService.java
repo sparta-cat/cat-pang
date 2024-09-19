@@ -1,5 +1,8 @@
 package com.catpang.hub.application.service;
 
+import static com.catpang.core.application.service.EntityMapper.*;
+
+
 import java.util.List;
 import java.util.UUID;
 import org.springframework.data.domain.Page;
@@ -29,7 +32,7 @@ public class HubService {
 
 	@Transactional
 	public HubDto.Result createHub(HubDto.Create createDto, UserDetails userDetails) {
-		UUID ownerId = UUID.fromString(userDetails.getUsername());
+		Long ownerId = getUserId(userDetails.getUsername());
 
 		Address address = Address.builder()
 			.city(createDto.address().city())
