@@ -214,28 +214,11 @@ services:
       timeout: 5s
       retries: 15
     restart: on-failure
-  
-  # PostgresSQL 정의
-  userPostgres:
-    image: postgres:13
-    env_file:
-      - ${USER_DB_ENV}
-    ports:
-      - ${USER_DB_OUTER_PORT}:${USER_DB_INNER_PORT}
-    volumes:
-      - postgres_data:/var/lib/postgresql/user/data  # 데이터 영속성을 위한 볼륨 설정
-    networks:
-      - my-microservices-network
-    healthcheck:
-      test: [ "CMD-SHELL", "pg_isready -U ${USER_POSTGRES_USER} -d ${USER_POSTGRES_DB}" ]
-      interval: 5s
-      timeout: 5s
-      retries: 15
 
   # Hub_Product 서버 정의
   hub_product:
     build:
-      context: ./hub_product
+      context: ./hubproduct
     env_file:
       - docker_env_files/hub_product_docker.env
     ports:
@@ -261,18 +244,18 @@ services:
     restart: on-failure
 
   # PostgresSQL 정의
-  userPostgres:
+  hub_productPostgres:
     image: postgres:13
     env_file:
-      - ${USER_DB_ENV}
+      - ${HUB_PRODUCT_DB_ENV}
     ports:
-      - ${USER_DB_OUTER_PORT}:${USER_DB_INNER_PORT}
+      - ${HUB_PRODUCT_DB_OUTER_PORT}:${HUB_PRODUCT_DB_INNER_PORT}
     volumes:
-      - postgres_data:/var/lib/postgresql/user/data  # 데이터 영속성을 위한 볼륨 설정
+      - postgres_data:/var/lib/postgresql/hub_product/data  # 데이터 영속성을 위한 볼륨 설정
     networks:
       - my-microservices-network
     healthcheck:
-      test: [ "CMD-SHELL", "pg_isready -U ${USER_POSTGRES_USER} -d ${USER_POSTGRES_DB}" ]
+      test: [ "CMD-SHELL", "pg_isready -U ${HUB_PRODUCT_POSTGRES_HUB_PRODUCT} -d ${HUB_PRODUCT_POSTGRES_DB}" ]
       interval: 5s
       timeout: 5s
       retries: 15
@@ -306,21 +289,39 @@ services:
     restart: on-failure
   
   # PostgresSQL 정의
-  userPostgres:
+  addressPostgres:
     image: postgres:13
     env_file:
-      - ${USER_DB_ENV}
+      - ${ADDRESS_DB_ENV}
     ports:
-      - ${USER_DB_OUTER_PORT}:${USER_DB_INNER_PORT}
+      - ${ADDRESS_DB_OUTER_PORT}:${ADDRESS_DB_INNER_PORT}
     volumes:
-      - postgres_data:/var/lib/postgresql/user/data  # 데이터 영속성을 위한 볼륨 설정
+      - postgres_data:/var/lib/postgresql/address/data  # 데이터 영속성을 위한 볼륨 설정
     networks:
       - my-microservices-network
     healthcheck:
-      test: [ "CMD-SHELL", "pg_isready -U ${USER_POSTGRES_USER} -d ${USER_POSTGRES_DB}" ]
+      test: [ "CMD-SHELL", "pg_isready -U ${ADDRESS_POSTGRES_ADDRESS} -d ${ADDRESS_POSTGRES_DB}" ]
       interval: 5s
       timeout: 5s
       retries: 15
+
+  # PostgresSQL 정의
+  companyPostgres:
+    image: postgres:13
+    env_file:
+      - ${COMPANY_DB_ENV}
+    ports:
+      - ${COMPANY_DB_OUTER_PORT}:${COMPANY_DB_INNER_PORT}
+    volumes:
+      - postgres_data:/var/lib/postgresql/company/data  # 데이터 영속성을 위한 볼륨 설정
+    networks:
+      - my-microservices-network
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U ${COMPANY_POSTGRES_COMPANY} -d ${COMPANY_POSTGRES_DB}" ]
+      interval: 5s
+      timeout: 5s
+      retries: 15
+
 
   # Company 서버 정의
   company:
