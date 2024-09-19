@@ -104,10 +104,10 @@ public class DeliveryController {
 	 */
 	@PreAuthorize("hasRole('" + MASTER_ADMIN + "') or hasRole('" + HUB_ADMIN + "')")
 	@DeleteMapping("/{deliveryId}")
-	public void deleteDelivery(@PathVariable UUID deliveryId,
+	public Delete.Result deleteDelivery(@PathVariable UUID deliveryId,
 		@AuthenticationPrincipal UserDetails userDetails) {
 
 		//TODO: deliveryAuth
-		deliveryService.softDeleteDelivery(deliveryId);
+		return deliveryService.softDeleteDelivery(deliveryId);
 	}
 }
