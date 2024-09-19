@@ -182,7 +182,7 @@ services:
     networks:
       - my-microservices-network
     healthcheck:
-      test: [ "CMD-SHELL", "pg_isready -U ${HUB_POSTGRES_HUB} -d ${HUB_POSTGRES_DB}" ]
+      test: [ "CMD-SHELL", "pg_isready -U ${HUB_POSTGRES_USER} -d ${HUB_POSTGRES_DB}" ]
       interval: 5s
       timeout: 5s
       retries: 15
@@ -255,7 +255,7 @@ services:
     networks:
       - my-microservices-network
     healthcheck:
-      test: [ "CMD-SHELL", "pg_isready -U ${HUB_PRODUCT_POSTGRES_HUB_PRODUCT} -d ${HUB_PRODUCT_POSTGRES_DB}" ]
+      test: [ "CMD-SHELL", "pg_isready -U ${HUB_PRODUCT_POSTGRES_USER} -d ${HUB_PRODUCT_POSTGRES_DB}" ]
       interval: 5s
       timeout: 5s
       retries: 15
@@ -287,7 +287,7 @@ services:
       timeout: 5s
       retries: 15
     restart: on-failure
-  
+
   # PostgresSQL 정의
   addressPostgres:
     image: postgres:13
@@ -300,7 +300,7 @@ services:
     networks:
       - my-microservices-network
     healthcheck:
-      test: [ "CMD-SHELL", "pg_isready -U ${ADDRESS_POSTGRES_ADDRESS} -d ${ADDRESS_POSTGRES_DB}" ]
+      test: [ "CMD-SHELL", "pg_isready -U ${ADDRESS_POSTGRES_USER} -d ${ADDRESS_POSTGRES_DB}" ]
       interval: 5s
       timeout: 5s
       retries: 15
@@ -317,7 +317,7 @@ services:
     networks:
       - my-microservices-network
     healthcheck:
-      test: [ "CMD-SHELL", "pg_isready -U ${COMPANY_POSTGRES_COMPANY} -d ${COMPANY_POSTGRES_DB}" ]
+      test: [ "CMD-SHELL", "pg_isready -U ${COMPANY_POSTGRES_USER} -d ${COMPANY_POSTGRES_DB}" ]
       interval: 5s
       timeout: 5s
       retries: 15
@@ -350,7 +350,7 @@ services:
       timeout: 5s
       retries: 15
     restart: on-failure
-  
+
   # PostgresSQL 정의
   productPostgres:
     image: postgres:13
@@ -363,7 +363,7 @@ services:
     networks:
       - my-microservices-network
     healthcheck:
-      test: [ "CMD-SHELL", "pg_isready -U ${PRODUCT_POSTGRES_PRODUCT} -d ${PRODUCT_POSTGRES_DB}" ]
+      test: [ "CMD-SHELL", "pg_isready -U ${PRODUCT_POSTGRES_USER} -d ${PRODUCT_POSTGRES_DB}" ]
       interval: 5s
       timeout: 5s
       retries: 15

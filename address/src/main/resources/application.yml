@@ -1,5 +1,5 @@
 server:
-  port: ${HUB_PORT}
+  port: ${ADDRESS_PORT}
 
 spring:
   cloud:
