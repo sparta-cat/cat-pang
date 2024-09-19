@@ -14,7 +14,7 @@ import com.catpang.core.codes.SuccessCode;
  * 모든 컨트롤러의 응답을 가로채어 ApiResponse.Success로 감싸는 클래스입니다.
  */
 @Component
-@RestControllerAdvice
+@RestControllerAdvice(basePackages = "com.catpang")
 public class GlobalResponseAdvice implements ResponseBodyAdvice<Object> {
 
 	/**
