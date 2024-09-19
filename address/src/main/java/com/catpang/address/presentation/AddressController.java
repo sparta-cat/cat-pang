@@ -1,5 +1,6 @@
 package com.catpang.address.presentation;
 
+import com.catpang.address.application.dto.AddressDto;
 import com.catpang.address.domain.model.Address;
 import com.catpang.address.application.service.AddressService;
 import org.springframework.validation.annotation.Validated;
@@ -19,9 +20,9 @@ public class AddressController {
 		this.addressService = addressService;
 	}
 
-	// UUID 타입으로 변경
+	// AddressDto.Result 타입을 반환하도록 수정
 	@GetMapping("/{id}")
-	public Address getAddressById(@PathVariable UUID id) {
+	public AddressDto.Result getAddressById(@PathVariable UUID id) {
 		return addressService.getAddressById(id);
 	}
 

@@ -28,7 +28,7 @@ public class Address {
 	private String street;
 
 	@Column(nullable = false)
-	private String zipcode;
+	private String zipCode;
 
 	@Column(nullable = true)
 	private String latitude;
