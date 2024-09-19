@@ -14,9 +14,8 @@ public class HubAuthService extends AbstractAuthorizer {
 	private final UserRoleChecker userRoleChecker;
 	private final HubRepositoryHelper hubRepositoryHelper;
 
-	// 생성자 명시
 	public HubAuthService(UserRoleChecker userRoleChecker, HubRepositoryHelper hubRepositoryHelper) {
-		super(userRoleChecker);  // 부모 클래스 생성자 호출
+		super(userRoleChecker);
 		this.userRoleChecker = userRoleChecker;
 		this.hubRepositoryHelper = hubRepositoryHelper;
 	}
@@ -25,7 +24,7 @@ public class HubAuthService extends AbstractAuthorizer {
 		if (userRoleChecker.isMasterAdmin(userDetails)) {
 			return;
 		}
-		Long ownerId = hubRepositoryHelper.findOrThrowNotFound(hubId).getOwnerId();
-		requireSelf(userDetails, ownerId);
+		UUID ownerId = hubRepositoryHelper.findOrThrowNotFound(hubId).getOwnerId();
+		requireSelf(userDetails, ownerId);  // ownerId를 그대로 전달
 	}
 }

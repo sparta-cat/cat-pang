@@ -29,9 +29,8 @@ public class HubService {
 
 	@Transactional
 	public HubDto.Result createHub(HubDto.Create createDto, UserDetails userDetails) {
-		Long ownerId = EntityMapper.getUserId(userDetails.getUsername());
+		UUID ownerId = UUID.fromString(userDetails.getUsername());
 
-		// Address 생성
 		Address address = Address.builder()
 			.city(createDto.address().city())
 			.street(createDto.address().street())
@@ -40,10 +39,8 @@ public class HubService {
 			.longitude(createDto.address().longitude())
 			.build();
 
-		// Address 저장
 		address = addressRepository.save(address);
 
-		// Hub 생성
 		Hub hub = Hub.builder()
 			.name(createDto.name())
 			.address(address)
@@ -55,11 +52,10 @@ public class HubService {
 		return HubDto.Result.builder()
 			.id(hub.getId())
 			.name(hub.getName())
-			.address(toAddressDto(hub.getAddress()))  // AddressDto로 변환하여 반환
+			.address(toAddressDto(hub.getAddress()))
 			.ownerId(hub.getOwnerId())
 			.build();
 	}
-
 	@Transactional
 	public HubDto.Result updateHub(UUID hubId, HubDto.Put putDto) {
 		Hub hub = hubRepositoryHelper.findOrThrowNotFound(hubId);
@@ -73,7 +69,7 @@ public class HubService {
 			.id(hub.getId())
 			.name(hub.getName())
 			.address(toAddressDto(hub.getAddress()))  // AddressDto로 변환하여 반환
-			.ownerId(hub.getOwnerId())
+			.ownerId(hub.getOwnerId())  // Long 타입으로 반환
 			.build();
 	}
 
@@ -83,7 +79,7 @@ public class HubService {
 			.id(hub.getId())
 			.name(hub.getName())
 			.address(toAddressDto(hub.getAddress()))  // AddressDto로 변환하여 반환
-			.ownerId(hub.getOwnerId())
+			.ownerId(hub.getOwnerId())  // Long 타입으로 반환
 			.build();
 	}
 
@@ -93,7 +89,7 @@ public class HubService {
 				.id(hub.getId())
 				.name(hub.getName())
 				.address(toAddressDto(hub.getAddress()))  // AddressDto로 변환하여 반환
-				.ownerId(hub.getOwnerId())
+				.ownerId(hub.getOwnerId())  // Long 타입으로 반환
 				.build());
 	}
 

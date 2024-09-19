@@ -13,14 +13,14 @@ public interface HubDto {
 	@Builder
 	record Create(
 		@NotNull @Size(min = 1, max = 100) String name,
-		@NotNull AddressDto.Create address  // Address 생성 정보를 포함
+		@NotNull AddressDto.Create address  // Address creation info
 	) {}
 
 	@With
 	@Builder
 	record Put(
 		@NotNull @Size(min = 1, max = 100) String name,
-		@NotNull Long addressId
+		@NotNull UUID addressId
 	) {}
 
 	@With
@@ -28,7 +28,7 @@ public interface HubDto {
 	record Result(
 		UUID id,
 		String name,
-		AddressDto.Result address,  // Address 객체 반환
-		Long ownerId
+		AddressDto.Result address,  // Address object returned
+		UUID ownerId
 	) {}
 }

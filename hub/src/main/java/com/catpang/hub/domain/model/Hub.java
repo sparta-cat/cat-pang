@@ -61,6 +61,6 @@ public class Hub extends Timestamped {
 	/**
 	 * 허브를 생성한 사용자의 ID입니다.
 	 */
-	@Column(name = "owner_id", nullable = false)
-	private Long ownerId;
+	@Column(name = "owner_id", nullable = false, columnDefinition = "uuid")
+	private UUID ownerId;
 }
