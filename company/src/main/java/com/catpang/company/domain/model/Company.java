@@ -3,7 +3,6 @@ package com.catpang.company.domain.model;
 import com.catpang.core.domain.model.auditing.Timestamped;
 import jakarta.persistence.*;
 import lombok.*;
-import org.hibernate.annotations.GenericGenerator;
 
 import java.util.UUID;
 
@@ -17,8 +16,7 @@ import java.util.UUID;
 public class Company extends Timestamped {
 
 	@Id
-	@GeneratedValue(generator = "UUID")
-	@GenericGenerator(name = "UUID", strategy = "org.hibernate.id.UUIDGenerator")
+    @GeneratedValue(strategy = GenerationType.UUID)
 	@Column(name = "company_id", updatable = false, nullable = false, columnDefinition = "uuid")
 	private UUID id;
 

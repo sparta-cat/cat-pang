@@ -1,9 +1,8 @@
 package com.catpang.core.presentation.controller;
 
-import org.springframework.web.bind.annotation.PathVariable;
-
 import com.catpang.core.application.dto.UserDto;
 import com.catpang.core.application.response.ApiResponse;
+import org.springframework.web.bind.annotation.PathVariable;
 
 public interface UserInternalController {
 
@@ -14,6 +13,6 @@ public interface UserInternalController {
 	 * @return 성공적인 응답과 조회된 유저 정보
 	 */
 
-	ApiResponse<UserDto.Result> getUser(@PathVariable Long id);
+    ApiResponse<UserDto.Result> getUser(@PathVariable Long id);
 
 }

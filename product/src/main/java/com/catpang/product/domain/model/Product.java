@@ -1,10 +1,9 @@
 package com.catpang.product.domain.model;
 
-import com.catpang.product.application.dto.ProductDto.Update;
 import com.catpang.core.domain.model.auditing.Timestamped;
+import com.catpang.product.application.dto.ProductDto.Update;
 import jakarta.persistence.*;
 import lombok.*;
-import org.hibernate.annotations.GenericGenerator;
 
 import java.util.UUID;
 
@@ -17,36 +16,35 @@ import java.util.UUID;
 @Table(name = "products")
 public class Product extends Timestamped {
 
-	@Id
-	@GeneratedValue(generator = "UUID")
-	@GenericGenerator(name = "UUID", strategy = "org.hibernate.id.UUIDGenerator")
-	@Column(name = "product_id", updatable = false, nullable = false, columnDefinition = "uuid")
-	private UUID id;
+    @Id
+    @GeneratedValue(strategy = GenerationType.UUID)
+    @Column(name = "product_id", updatable = false, nullable = false, columnDefinition = "uuid")
+    private UUID id;
 
-	@Column(length = 100, nullable = false)
-	private String name;
+    @Column(length = 100, nullable = false)
+    private String name;
 
-	@Column(nullable = false)
-	private UUID companyId;
+    @Column(nullable = false)
+    private UUID companyId;
 
-	@Column(nullable = false)
-	private UUID hubId;
+    @Column(nullable = false)
+    private UUID hubId;
 
-	@Column(nullable = false)
-	private int price;
+    @Column(nullable = false)
+    private int price;
 
-	@Builder.Default
-	private boolean isDeleted = false;
+    @Builder.Default
+    private boolean isDeleted = false;
 
-	public void softDelete() {
-		this.isDeleted = true;
-	}
+    public void softDelete() {
+        this.isDeleted = true;
+    }
 
-	// Update 메소드 추가
-	public void update(Update updateDto) {
-		this.name = updateDto.name();
-		this.companyId = updateDto.companyId();
-		this.hubId = updateDto.hubId();
-		this.price = updateDto.price();
-	}
+    // Update 메소드 추가
+    public void update(Update updateDto) {
+        this.name = updateDto.name();
+        this.companyId = updateDto.companyId();
+        this.hubId = updateDto.hubId();
+        this.price = updateDto.price();
+    }
 }

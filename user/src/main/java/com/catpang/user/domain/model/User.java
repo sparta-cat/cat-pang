@@ -45,6 +45,7 @@ public class User extends Timestamped {
     @Column(unique = true, nullable = false)
     private String slackId;
 
+    @Builder.Default
     @OneToMany(mappedBy = "sender", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<SlackMessage> messages = new ArrayList<>();
 

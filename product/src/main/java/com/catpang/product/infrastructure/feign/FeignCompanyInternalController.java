@@ -11,6 +11,6 @@ import java.util.UUID;
 @FeignClient(name = "company-service")
 public interface FeignCompanyInternalController {
 
-	@GetMapping("/api/v1/companies/{id}")
+    @GetMapping("/api/v1/internal/companies/{id}")
 	ApiResponse<CompanyDto.Result> getCompany(@PathVariable UUID id);
 }

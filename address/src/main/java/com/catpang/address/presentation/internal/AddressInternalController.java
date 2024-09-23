@@ -19,8 +19,10 @@ public class AddressInternalController {
 	private final AddressService addressService;
 
 	@GetMapping("/{id}")
-	public ApiResponse<AddressDto.Result> getAddressById(@PathVariable UUID id) {
+	public ApiResponse<AddressDto.Result> getAddress(@PathVariable UUID id) {
+		System.out.println("aaaaaaaaa");
 		AddressDto.Result address = addressService.getAddressById(id);
+		System.out.println("ccccccccccccc");
 		return ApiResponse.Success.<AddressDto.Result>builder()
 			.result(address)
 			.build();

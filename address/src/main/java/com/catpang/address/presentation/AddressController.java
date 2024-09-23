@@ -1,8 +1,8 @@
 package com.catpang.address.presentation;
 
 import com.catpang.address.application.dto.AddressDto;
-import com.catpang.address.domain.model.Address;
 import com.catpang.address.application.service.AddressService;
+import com.catpang.address.domain.model.Address;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -32,7 +32,7 @@ public class AddressController {
 	}
 
 	@PostMapping
-	public Address createAddress(@RequestBody Address address) {
+	public Address createAddress(@RequestBody AddressDto.Create address) {
 		return addressService.createAddress(address);
 	}
 }

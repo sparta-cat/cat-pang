@@ -33,6 +33,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public UserDto.Result join(UserDto.Create userCreate) {
         RoleEnum role = RoleEnum.fromRoleCode(userCreate.roleCode());
+        System.out.println("role = " + role);
         User user = userRepository.save(userMapperService.toUserEntity(userCreate, role));
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if (authentication != null && authentication.isAuthenticated() && !"anonymousUser".equals(authentication.getName())) {

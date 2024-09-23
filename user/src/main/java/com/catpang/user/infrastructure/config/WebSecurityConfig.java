@@ -2,8 +2,10 @@ package com.catpang.user.infrastructure.config;
 
 import com.catpang.core.infrastructure.config.GlobalSecurityConfig;
 import com.catpang.user.application.service.TokenService;
+import com.catpang.user.domain.repository.RefreshTokenRepository;
 import com.catpang.user.infrastructure.jwt.JwtUtil;
 import com.catpang.user.infrastructure.jwt.LoginFilter;
+import com.catpang.user.infrastructure.jwt.LogoutFilter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
@@ -27,6 +29,12 @@ public class WebSecurityConfig {
     private final JwtUtil jwtUtil;
     private final AuthenticationConfiguration authenticationConfiguration;
     private final TokenService refreshTokenService;
+    private final RefreshTokenRepository refreshTokenRepository;
+
+    @Bean
+    public LogoutFilter jwtLogoutFilter() {
+        return new LogoutFilter(jwtUtil, refreshTokenRepository);
+    }
 
     @Bean
     public AuthenticationManager authenticationManager(AuthenticationConfiguration configuration) throws Exception {
@@ -46,6 +54,7 @@ public class WebSecurityConfig {
         return new BCryptPasswordEncoder();
     }
 
+    // TODO: 로그아웃 필터 추가
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http, GlobalSecurityConfig globalSecurityConfig) throws Exception {
         SecurityFilterChain coreSecurityFilterChain = globalSecurityConfig.coreSecurityFilterChain(http);

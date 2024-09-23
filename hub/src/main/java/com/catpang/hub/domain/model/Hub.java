@@ -1,25 +1,11 @@
 package com.catpang.hub.domain.model;
 
-import java.util.UUID;
-
-import org.hibernate.annotations.GenericGenerator;
-
-import com.catpang.core.domain.model.auditing.Timestamped;
 import com.catpang.address.domain.model.Address;
+import com.catpang.core.domain.model.auditing.Timestamped;
+import jakarta.persistence.*;
+import lombok.*;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.Table;
-import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import java.util.UUID;
 
 /**
  * Hub 엔티티는 허브의 정보를 저장하는 클래스입니다.
@@ -39,8 +25,7 @@ public class Hub extends Timestamped {
 	 * PostgreSQL의 uuid 타입과 매핑됩니다.
 	 */
 	@Id
-	@GeneratedValue(generator = "UUID")
-	@GenericGenerator(name = "UUID", strategy = "org.hibernate.id.UUIDGenerator")
+    @GeneratedValue(strategy = GenerationType.UUID)
 	@Column(name = "hub_id", updatable = false, nullable = false, columnDefinition = "uuid")
 	private UUID id;
 

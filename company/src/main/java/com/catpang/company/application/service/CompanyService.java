@@ -1,19 +1,19 @@
 package com.catpang.company.application.service;
 
-import java.util.UUID;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 import com.catpang.company.application.dto.CompanyDto;
 import com.catpang.company.domain.model.Company;
-import com.catpang.company.domain.model.CompanyType;
 import com.catpang.company.domain.repository.CompanyRepository;
 import com.catpang.company.domain.repository.CompanyRepositoryHelper;
 import com.catpang.company.domain.repository.CompanySearchCondition;
 import com.catpang.company.infrastructure.feign.FeignAddressClient;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
@@ -26,6 +26,7 @@ public class CompanyService {
 
 	@Transactional
 	public CompanyDto.Result createCompany(CompanyDto.Create createDto, UserDetails userDetails) {
+		System.out.println("asdlfsadfsdfasdsadfsd");
 		addressClient.getAddress(createDto.addressId());
 
 		Company company = Company.builder()

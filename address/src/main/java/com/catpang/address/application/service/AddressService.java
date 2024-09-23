@@ -21,6 +21,7 @@ public class AddressService {
 
 	// Address ID로 AddressDto를 반환하는 메서드 추가
 	public AddressDto.Result getAddressById(UUID id) {
+		System.out.println("bbbbbbbbb");
 		Address address = addressRepository.findById(id)
 			.orElseThrow(() -> new IllegalArgumentException("Address not found: " + id));
 		return toDto(address);
@@ -44,7 +45,13 @@ public class AddressService {
 	}
 
 	@Transactional
-	public Address createAddress(Address address) {
-		return addressRepository.save(address);
+	public Address createAddress(AddressDto.Create address) {
+		return addressRepository.save(Address.builder()
+				.zipCode(address.zipcode())
+				.city(address.city())
+				.street(address.street())
+				.latitude(address.latitude())
+				.longitude(address.longitude())
+				.build());
 	}
 }

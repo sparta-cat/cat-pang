@@ -1,16 +1,5 @@
 package com.catpang.delivery.application.service;
 
-import static com.catpang.core.application.dto.DeliveryDto.*;
-import static com.catpang.core.domain.model.DeliveryStatus.*;
-import static com.catpang.delivery.application.service.DeliveryMapper.*;
-
-import java.util.UUID;
-
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
 import com.catpang.core.application.dto.HubDto;
 import com.catpang.core.application.dto.UserDto;
 import com.catpang.delivery.domain.model.Delivery;
@@ -22,9 +11,18 @@ import com.catpang.delivery.infrastructure.feign.FeignUserInternalController;
 import com.catpang.order.domain.model.Order;
 import com.catpang.order.domain.repository.OrderRepositoryHelper;
 import com.catpang.order.infrastructure.feign.FeignCompanyInternalController;
-
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.util.UUID;
+
+import static com.catpang.core.application.dto.DeliveryDto.*;
+import static com.catpang.core.domain.model.DeliveryStatus.*;
+import static com.catpang.delivery.application.service.DeliveryMapper.*;
 
 @Service
 @RequiredArgsConstructor(access = AccessLevel.PROTECTED)
@@ -52,7 +50,7 @@ public class DeliveryService {
 		UUID departureHubId = departureHub.id();
 		UUID destinationHubId = hubController.getHub(createDto.destinationHubId()).getResult().id();
 		UUID receiveCompanyId = companyController.getCompany(createDto.receiveCompanyId()).getResult().id();
-		UserDto.Result owner = userController.getUser(createDto.receiverId()).getResult();
+        UserDto.Result owner = (userController.getUser(createDto.receiverId())).getResult();
 		Long receiverId = owner.id();
 		UUID receiverSlackId = UUID.fromString(owner.slackId()); //TODO
 

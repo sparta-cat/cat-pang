@@ -3,7 +3,6 @@ package com.catpang.hubproduct.domain.model;
 import com.catpang.core.domain.model.auditing.Timestamped;
 import jakarta.persistence.*;
 import lombok.*;
-import org.hibernate.annotations.GenericGenerator;
 
 import java.util.UUID;
 
@@ -16,18 +15,17 @@ import java.util.UUID;
 @Table(name = "hub_products")
 public class HubProduct extends Timestamped {
 
-	@Id
-	@GeneratedValue(generator = "UUID")
-	@GenericGenerator(name = "UUID", strategy = "org.hibernate.id.UUIDGenerator")
-	@Column(name = "hub_product_id", updatable = false, nullable = false, columnDefinition = "uuid")
-	private UUID id;
+    @Id
+    @GeneratedValue(strategy = GenerationType.UUID)
+    @Column(name = "hub_product_id", updatable = false, nullable = false, columnDefinition = "uuid")
+    private UUID id;
 
-	@Column(nullable = false)
-	private UUID hubId;
+    @Column(nullable = false)
+    private UUID hubId;
 
-	@Column(nullable = false)
-	private UUID productId;
+    @Column(nullable = false)
+    private UUID productId;
 
-	@Column(nullable = false)
-	private int amount;  // 상품 수량
+    @Column(nullable = false)
+    private int amount;  // 상품 수량
 }

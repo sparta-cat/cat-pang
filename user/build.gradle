@@ -23,3 +23,8 @@ dependencies {
     implementation("com.slack.api:slack-api-client:1.43.0")
 
 }
+
+tasks.withType(JavaCompile) {
+    options.compilerArgs << "-Xlint:deprecation"
+}
+
